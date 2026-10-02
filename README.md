@@ -24,14 +24,14 @@ Dataset: [huggingface.co/datasets/swiftrando/PhysicsLENS](https://huggingface.co
 
 ### Key Features:
 - **Matched scenario pairs**: 80 observable scenarios and 30 hidden-property variants. Each pair keeps the same conditioning frame and task; only the scene description changes, to state a property (viscosity, surface condition, elasticity, mass) the image does not reveal.
-
-<p align="center">
-  <img src="assets/fig_matched_scenario2.png" width="100%" alt="Four matched scenarios: the same conditioning frame with an observable description and an unobservable, text-specified property">
-</p>
 - **Real robot starting frames**: drawn from 11 public robot datasets covering humanoid, dual-arm, single-arm and mobile manipulators.
 - **Four video generators**: Wan 2.2, Cosmos 3 Nano, HunyuanVideo 1.5 and MAGI 4.5B Distill, giving 439 generated videos (320 observable, 119 unobservable).
 - **Separate human judgments**: physical plausibility (1–4), task completion (yes/no), adherence to the stated property (1–4, unobservable videos only), and violation labels.
 - **Automated evaluator**: ten open-weight VLMs answering targeted questions, combined with 38 motion and embedding signals, evaluated against the human labels with grouped cross-validation.
+
+<p align="center">
+  <img src="assets/fig_matched_scenario2.png" width="100%" alt="Four matched scenarios: the same conditioning frame with an observable description and an unobservable, text-specified property">
+</p>
 
 > **Two configurations.** The paper's automated results evaluate the **offline
 > evaluator** (`backend/scripts/`). The **interactive diagnostic tool**
