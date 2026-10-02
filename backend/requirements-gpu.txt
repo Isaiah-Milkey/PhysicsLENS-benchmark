@@ -1,0 +1,24 @@
+# GPU dependencies for the SAM3 + DINOv2 object-tracking pipeline ("sam_track").
+# Install on a CUDA host (e.g. the H100 box) IN ADDITION to requirements.txt:
+#
+#     pip install -r requirements.txt
+#     pip install -r requirements-gpu.txt
+#
+# Models are downloaded on first use into $HF_HOME:
+#   * SAM 3   — facebook/sam3        (GATED: run `hf auth login` with an approved
+#                                      account before first use; ~3.4 GB)
+#   * DINOv2  — facebook/dinov2-base (Apache-2.0, non-gated, 768-d descriptor)
+#
+# SAM 3 requires transformers >= 5.1 (5.9 verified on this host).
+# The object tracker also uses a local VLM (Qwen2.5-VL-7B-Instruct) to NAME the
+# objects it segments, so labels are human-readable. num2words is needed only if
+# you swap in SmolVLM-family models for the VLM-eval scripts.
+torch>=2.7
+torchvision>=0.18    # required by the DINOv2 / SAM3 image processors
+transformers>=5.5
+accelerate>=1.0
+safetensors>=0.4
+huggingface_hub>=0.34
+pillow>=10.0.0
+qwen-vl-utils>=0.0.8 # optional helper for Qwen2.5-VL preprocessing
+num2words>=0.5       # only for SmolVLM-family models in scripts/vlm_multimodel_eval.py

@@ -1,0 +1,14 @@
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+opencv-python-headless>=4.9.0
+numpy>=1.26.0
+matplotlib>=3.8.0
+plotly>=5.20.0
+pillow>=10.0.0
+aiohttp>=3.9.0
+requests>=2.31.0
+openai>=1.40.0
+huggingface_hub>=0.23.0
+python-dotenv>=1.0.0
+scipy>=1.11.0            # optional: Savitzky-Golay smoothing in Stage 2 trajectory_extractor; falls back to a numpy boxcar filter if absent

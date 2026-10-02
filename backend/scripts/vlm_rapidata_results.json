@@ -1,0 +1,750 @@
+{
+  "dataset": "Rapidata/sora-video-generation-physics-likert-scoring",
+  "protocol": "stratified n=60 of 198, label=LikertScoreNormalized (higher=more physically implausible)",
+  "models": {
+    "Qwen/Qwen2.5-VL-7B-Instruct": {
+      "rows": [
+        {
+          "video": "078_20250114_sora.mp4",
+          "human_score": 0.3047,
+          "model_score": 0.0,
+          "logprob_score": 0.0331
+        },
+        {
+          "video": "053_20250114_sora.mp4",
+          "human_score": 0.3374,
+          "model_score": 0.2,
+          "logprob_score": 0.2451
+        },
+        {
+          "video": "017_20250114_sora.mp4",
+          "human_score": 0.3515,
+          "model_score": 0.2,
+          "logprob_score": 0.0759
+        },
+        {
+          "video": "114_20250114_sora.mp4",
+          "human_score": 0.3602,
+          "model_score": 0.2,
+          "logprob_score": 0.3208
+        },
+        {
+          "video": "047_20250114_sora.mp4",
+          "human_score": 0.3702,
+          "model_score": 0.2,
+          "logprob_score": 0.2942
+        },
+        {
+          "video": "115_20250114_sora.mp4",
+          "human_score": 0.3853,
+          "model_score": 0.2,
+          "logprob_score": 0.269
+        },
+        {
+          "video": "183_20250114_sora.mp4",
+          "human_score": 0.3954,
+          "model_score": 0.0,
+          "logprob_score": 0.0421
+        },
+        {
+          "video": "139_20250114_sora.mp4",
+          "human_score": 0.3995,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "064_20250114_sora.mp4",
+          "human_score": 0.4052,
+          "model_score": 0.0,
+          "logprob_score": 0.0601
+        },
+        {
+          "video": "188_20250114_sora.mp4",
+          "human_score": 0.4202,
+          "model_score": 0.0,
+          "logprob_score": 0.0373
+        },
+        {
+          "video": "019_20250114_sora.mp4",
+          "human_score": 0.4246,
+          "model_score": 0.2,
+          "logprob_score": 0.1067
+        },
+        {
+          "video": "068_20250114_sora.mp4",
+          "human_score": 0.437,
+          "model_score": 0.0,
+          "logprob_score": 0.0203
+        },
+        {
+          "video": "187_20250114_sora.mp4",
+          "human_score": 0.4403,
+          "model_score": 0.2,
+          "logprob_score": 0.0851
+        },
+        {
+          "video": "199_20250114_sora.mp4",
+          "human_score": 0.4542,
+          "model_score": 0.0,
+          "logprob_score": 0.0373
+        },
+        {
+          "video": "163_20250114_sora.mp4",
+          "human_score": 0.4571,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "182_20250114_sora.mp4",
+          "human_score": 0.4637,
+          "model_score": 0.0,
+          "logprob_score": 0.0373
+        },
+        {
+          "video": "127_20250114_sora.mp4",
+          "human_score": 0.4672,
+          "model_score": 0.2,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "132_20250114_sora.mp4",
+          "human_score": 0.4729,
+          "model_score": 0.2,
+          "logprob_score": 0.0851
+        },
+        {
+          "video": "096_20250114_sora.mp4",
+          "human_score": 0.4789,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "186_20250114_sora.mp4",
+          "human_score": 0.4815,
+          "model_score": 0.0,
+          "logprob_score": 0.018
+        },
+        {
+          "video": "041_20250114_sora.mp4",
+          "human_score": 0.4836,
+          "model_score": 0.2,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "060_20250114_sora.mp4",
+          "human_score": 0.4892,
+          "model_score": 0.2,
+          "logprob_score": 0.1645
+        },
+        {
+          "video": "122_20250114_sora.mp4",
+          "human_score": 0.4964,
+          "model_score": 0.0,
+          "logprob_score": 0.0474
+        },
+        {
+          "video": "131_20250114_sora.mp4",
+          "human_score": 0.4982,
+          "model_score": 0.2,
+          "logprob_score": 0.1645
+        },
+        {
+          "video": "009_20250114_sora.mp4",
+          "human_score": 0.506,
+          "model_score": 0.2,
+          "logprob_score": 0.269
+        },
+        {
+          "video": "038_20250114_sora.mp4",
+          "human_score": 0.5089,
+          "model_score": 0.0,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "169_20250114_sora.mp4",
+          "human_score": 0.5132,
+          "model_score": 0.2,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "016_20250114_sora.mp4",
+          "human_score": 0.5168,
+          "model_score": 0.2,
+          "logprob_score": 0.2451
+        },
+        {
+          "video": "117_20250114_sora.mp4",
+          "human_score": 0.5182,
+          "model_score": 0.2,
+          "logprob_score": 0.1067
+        },
+        {
+          "video": "033_20250114_sora.mp4",
+          "human_score": 0.5202,
+          "model_score": 0.0,
+          "logprob_score": 0.0534
+        },
+        {
+          "video": "095_20250114_sora.mp4",
+          "human_score": 0.5244,
+          "model_score": 0.2,
+          "logprob_score": 0.2227
+        },
+        {
+          "video": "175_20250114_sora.mp4",
+          "human_score": 0.5287,
+          "model_score": 0.2,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "090_20250114_sora.mp4",
+          "human_score": 0.5345,
+          "model_score": 0.0,
+          "logprob_score": 0.1192
+        },
+        {
+          "video": "039_20250114_sora.mp4",
+          "human_score": 0.5463,
+          "model_score": 0.2,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "185_20250114_sora.mp4",
+          "human_score": 0.5495,
+          "model_score": 0.2,
+          "logprob_score": 0.1067
+        },
+        {
+          "video": "034_20250114_sora.mp4",
+          "human_score": 0.5555,
+          "model_score": 0.2,
+          "logprob_score": 0.3775
+        },
+        {
+          "video": "173_20250114_sora.mp4",
+          "human_score": 0.5594,
+          "model_score": 0.2,
+          "logprob_score": 0.1645
+        },
+        {
+          "video": "088_20250114_sora.mp4",
+          "human_score": 0.5721,
+          "model_score": 0.2,
+          "logprob_score": 0.1192
+        },
+        {
+          "video": "154_20250114_sora.mp4",
+          "human_score": 0.5769,
+          "model_score": 0.2,
+          "logprob_score": 0.0676
+        },
+        {
+          "video": "123_20250114_sora.mp4",
+          "human_score": 0.5787,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "219_20250114_sora.mp4",
+          "human_score": 0.5816,
+          "model_score": 0.2,
+          "logprob_score": 0.0759
+        },
+        {
+          "video": "040_20250114_sora.mp4",
+          "human_score": 0.591,
+          "model_score": 0.2,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "223_20250114_sora.mp4",
+          "human_score": 0.5932,
+          "model_score": 0.2,
+          "logprob_score": 0.269
+        },
+        {
+          "video": "072_20250114_sora.mp4",
+          "human_score": 0.596,
+          "model_score": 0.2,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "098_20250114_sora.mp4",
+          "human_score": 0.6028,
+          "model_score": 0.2,
+          "logprob_score": 0.1481
+        },
+        {
+          "video": "153_20250114_sora.mp4",
+          "human_score": 0.6082,
+          "model_score": 0.2,
+          "logprob_score": 0.2227
+        },
+        {
+          "video": "091_20250114_sora.mp4",
+          "human_score": 0.6125,
+          "model_score": 0.0,
+          "logprob_score": 0.1192
+        },
+        {
+          "video": "212_20250114_sora.mp4",
+          "human_score": 0.6154,
+          "model_score": 0.2,
+          "logprob_score": 0.2018
+        },
+        {
+          "video": "012_20250114_sora.mp4",
+          "human_score": 0.6206,
+          "model_score": 0.2,
+          "logprob_score": 0.1192
+        },
+        {
+          "video": "055_20250114_sora.mp4",
+          "human_score": 0.6224,
+          "model_score": 1.0,
+          "logprob_score": 0.4073
+        },
+        {
+          "video": "112_20250114_sora.mp4",
+          "human_score": 0.6293,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "150_20250114_sora.mp4",
+          "human_score": 0.6424,
+          "model_score": 0.2,
+          "logprob_score": 0.0675
+        },
+        {
+          "video": "121_20250114_sora.mp4",
+          "human_score": 0.6484,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "192_20250114_sora.mp4",
+          "human_score": 0.6541,
+          "model_score": 0.2,
+          "logprob_score": 0.3487
+        },
+        {
+          "video": "203_20250114_sora.mp4",
+          "human_score": 0.6659,
+          "model_score": 0.2,
+          "logprob_score": 0.269
+        },
+        {
+          "video": "135_20250114_sora.mp4",
+          "human_score": 0.685,
+          "model_score": 0.2,
+          "logprob_score": 0.2942
+        },
+        {
+          "video": "021_20250114_sora.mp4",
+          "human_score": 0.6968,
+          "model_score": 0.2,
+          "logprob_score": 0.1645
+        },
+        {
+          "video": "003_20250114_sora.mp4",
+          "human_score": 0.7052,
+          "model_score": 0.0,
+          "logprob_score": 0.1067
+        },
+        {
+          "video": "002_20250114_sora.mp4",
+          "human_score": 0.7375,
+          "model_score": 0.2,
+          "logprob_score": 0.4688
+        },
+        {
+          "video": "206_20250114_sora.mp4",
+          "human_score": 0.7784,
+          "model_score": 0.2,
+          "logprob_score": 0.1824
+        }
+      ],
+      "summary": {
+        "n": 60,
+        "n_parsed": 60,
+        "spearman": 0.297,
+        "median_split_auc": 0.644,
+        "logprob_spearman": 0.343,
+        "logprob_median_split_auc": 0.7
+      }
+    },
+    "OpenGVLab/InternVL3-8B-hf": {
+      "rows": [
+        {
+          "video": "078_20250114_sora.mp4",
+          "human_score": 0.3047,
+          "model_score": 0.0,
+          "logprob_score": 0.0086
+        },
+        {
+          "video": "053_20250114_sora.mp4",
+          "human_score": 0.3374,
+          "model_score": 0.0,
+          "logprob_score": 0.3487
+        },
+        {
+          "video": "017_20250114_sora.mp4",
+          "human_score": 0.3515,
+          "model_score": 0.0,
+          "logprob_score": 0.0421
+        },
+        {
+          "video": "114_20250114_sora.mp4",
+          "human_score": 0.3602,
+          "model_score": 0.0,
+          "logprob_score": 0.0601
+        },
+        {
+          "video": "047_20250114_sora.mp4",
+          "human_score": 0.3702,
+          "model_score": 0.0,
+          "logprob_score": 0.2942
+        },
+        {
+          "video": "115_20250114_sora.mp4",
+          "human_score": 0.3853,
+          "model_score": 0.0,
+          "logprob_score": 0.148
+        },
+        {
+          "video": "183_20250114_sora.mp4",
+          "human_score": 0.3954,
+          "model_score": 0.0,
+          "logprob_score": 0.0059
+        },
+        {
+          "video": "139_20250114_sora.mp4",
+          "human_score": 0.3995,
+          "model_score": 0.0,
+          "logprob_score": 0.3487
+        },
+        {
+          "video": "064_20250114_sora.mp4",
+          "human_score": 0.4052,
+          "model_score": 0.0,
+          "logprob_score": 0.1645
+        },
+        {
+          "video": "188_20250114_sora.mp4",
+          "human_score": 0.4202,
+          "model_score": 0.0,
+          "logprob_score": 0.0022
+        },
+        {
+          "video": "019_20250114_sora.mp4",
+          "human_score": 0.4246,
+          "model_score": 0.0,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "068_20250114_sora.mp4",
+          "human_score": 0.437,
+          "model_score": 0.0,
+          "logprob_score": 0.0004
+        },
+        {
+          "video": "187_20250114_sora.mp4",
+          "human_score": 0.4403,
+          "model_score": 0.0,
+          "logprob_score": 0.0759
+        },
+        {
+          "video": "199_20250114_sora.mp4",
+          "human_score": 0.4542,
+          "model_score": 0.0,
+          "logprob_score": 0.1067
+        },
+        {
+          "video": "163_20250114_sora.mp4",
+          "human_score": 0.4571,
+          "model_score": 0.0,
+          "logprob_score": 0.4073
+        },
+        {
+          "video": "182_20250114_sora.mp4",
+          "human_score": 0.4637,
+          "model_score": 0.0,
+          "logprob_score": 0.0007
+        },
+        {
+          "video": "127_20250114_sora.mp4",
+          "human_score": 0.4672,
+          "model_score": 0.0,
+          "logprob_score": 0.1192
+        },
+        {
+          "video": "132_20250114_sora.mp4",
+          "human_score": 0.4729,
+          "model_score": 0.0,
+          "logprob_score": 0.023
+        },
+        {
+          "video": "096_20250114_sora.mp4",
+          "human_score": 0.4789,
+          "model_score": 0.0,
+          "logprob_score": 0.0851
+        },
+        {
+          "video": "186_20250114_sora.mp4",
+          "human_score": 0.4815,
+          "model_score": 0.0,
+          "logprob_score": 0.0012
+        },
+        {
+          "video": "041_20250114_sora.mp4",
+          "human_score": 0.4836,
+          "model_score": 0.0,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "060_20250114_sora.mp4",
+          "human_score": 0.4892,
+          "model_score": 0.0,
+          "logprob_score": 0.4073
+        },
+        {
+          "video": "122_20250114_sora.mp4",
+          "human_score": 0.4964,
+          "model_score": 0.0,
+          "logprob_score": 0.0076
+        },
+        {
+          "video": "131_20250114_sora.mp4",
+          "human_score": 0.4982,
+          "model_score": 0.0,
+          "logprob_score": 0.0373
+        },
+        {
+          "video": "009_20250114_sora.mp4",
+          "human_score": 0.506,
+          "model_score": 0.0,
+          "logprob_score": 0.6225
+        },
+        {
+          "video": "038_20250114_sora.mp4",
+          "human_score": 0.5089,
+          "model_score": 0.0,
+          "logprob_score": 0.0124
+        },
+        {
+          "video": "169_20250114_sora.mp4",
+          "human_score": 0.5132,
+          "model_score": 0.0,
+          "logprob_score": 0.0421
+        },
+        {
+          "video": "016_20250114_sora.mp4",
+          "human_score": 0.5168,
+          "model_score": 0.0,
+          "logprob_score": 0.3208
+        },
+        {
+          "video": "117_20250114_sora.mp4",
+          "human_score": 0.5182,
+          "model_score": 0.0,
+          "logprob_score": 0.0293
+        },
+        {
+          "video": "033_20250114_sora.mp4",
+          "human_score": 0.5202,
+          "model_score": 0.0,
+          "logprob_score": 0.0025
+        },
+        {
+          "video": "095_20250114_sora.mp4",
+          "human_score": 0.5244,
+          "model_score": 0.0,
+          "logprob_score": 0.4688
+        },
+        {
+          "video": "175_20250114_sora.mp4",
+          "human_score": 0.5287,
+          "model_score": 0.0,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "090_20250114_sora.mp4",
+          "human_score": 0.5345,
+          "model_score": 0.0,
+          "logprob_score": 0.2227
+        },
+        {
+          "video": "039_20250114_sora.mp4",
+          "human_score": 0.5463,
+          "model_score": 0.0,
+          "logprob_score": 0.0954
+        },
+        {
+          "video": "185_20250114_sora.mp4",
+          "human_score": 0.5495,
+          "model_score": 0.0,
+          "logprob_score": 0.148
+        },
+        {
+          "video": "034_20250114_sora.mp4",
+          "human_score": 0.5555,
+          "model_score": 0.0,
+          "logprob_score": 0.6514
+        },
+        {
+          "video": "173_20250114_sora.mp4",
+          "human_score": 0.5594,
+          "model_score": 0.0,
+          "logprob_score": 0.2227
+        },
+        {
+          "video": "088_20250114_sora.mp4",
+          "human_score": 0.5721,
+          "model_score": 0.8,
+          "logprob_score": 0.5622
+        },
+        {
+          "video": "154_20250114_sora.mp4",
+          "human_score": 0.5769,
+          "model_score": 0.0,
+          "logprob_score": 0.2451
+        },
+        {
+          "video": "123_20250114_sora.mp4",
+          "human_score": 0.5787,
+          "model_score": 0.0,
+          "logprob_score": 0.0759
+        },
+        {
+          "video": "219_20250114_sora.mp4",
+          "human_score": 0.5816,
+          "model_score": 0.0,
+          "logprob_score": 0.7311
+        },
+        {
+          "video": "040_20250114_sora.mp4",
+          "human_score": 0.591,
+          "model_score": 0.0,
+          "logprob_score": 0.0067
+        },
+        {
+          "video": "223_20250114_sora.mp4",
+          "human_score": 0.5932,
+          "model_score": 0.0,
+          "logprob_score": 0.4378
+        },
+        {
+          "video": "072_20250114_sora.mp4",
+          "human_score": 0.596,
+          "model_score": 0.0,
+          "logprob_score": 0.1824
+        },
+        {
+          "video": "098_20250114_sora.mp4",
+          "human_score": 0.6028,
+          "model_score": 0.0,
+          "logprob_score": 0.5
+        },
+        {
+          "video": "153_20250114_sora.mp4",
+          "human_score": 0.6082,
+          "model_score": 0.0,
+          "logprob_score": 0.133
+        },
+        {
+          "video": "091_20250114_sora.mp4",
+          "human_score": 0.6125,
+          "model_score": 0.0,
+          "logprob_score": 0.4073
+        },
+        {
+          "video": "212_20250114_sora.mp4",
+          "human_score": 0.6154,
+          "model_score": 0.0,
+          "logprob_score": 0.4073
+        },
+        {
+          "video": "012_20250114_sora.mp4",
+          "human_score": 0.6206,
+          "model_score": 0.0,
+          "logprob_score": 0.0373
+        },
+        {
+          "video": "055_20250114_sora.mp4",
+          "human_score": 0.6224,
+          "model_score": 0.0,
+          "logprob_score": 0.7773
+        },
+        {
+          "video": "112_20250114_sora.mp4",
+          "human_score": 0.6293,
+          "model_score": 0.0,
+          "logprob_score": 0.148
+        },
+        {
+          "video": "150_20250114_sora.mp4",
+          "human_score": 0.6424,
+          "model_score": 0.9,
+          "logprob_score": 0.7311
+        },
+        {
+          "video": "121_20250114_sora.mp4",
+          "human_score": 0.6484,
+          "model_score": 0.0,
+          "logprob_score": 0.2942
+        },
+        {
+          "video": "192_20250114_sora.mp4",
+          "human_score": 0.6541,
+          "model_score": 0.0,
+          "logprob_score": 0.5622
+        },
+        {
+          "video": "203_20250114_sora.mp4",
+          "human_score": 0.6659,
+          "model_score": 0.0,
+          "logprob_score": 0.3208
+        },
+        {
+          "video": "135_20250114_sora.mp4",
+          "human_score": 0.685,
+          "model_score": 0.0,
+          "logprob_score": 0.2227
+        },
+        {
+          "video": "021_20250114_sora.mp4",
+          "human_score": 0.6968,
+          "model_score": 0.0,
+          "logprob_score": 0.6225
+        },
+        {
+          "video": "003_20250114_sora.mp4",
+          "human_score": 0.7052,
+          "model_score": 0.0,
+          "logprob_score": 0.3486
+        },
+        {
+          "video": "002_20250114_sora.mp4",
+          "human_score": 0.7375,
+          "model_score": 0.0,
+          "logprob_score": 0.6225
+        },
+        {
+          "video": "206_20250114_sora.mp4",
+          "human_score": 0.7784,
+          "model_score": 0.0,
+          "logprob_score": 0.4688
+        }
+      ],
+      "summary": {
+        "n": 60,
+        "n_parsed": 60,
+        "spearman": 0.157,
+        "median_split_auc": 0.533,
+        "logprob_spearman": 0.513,
+        "logprob_median_split_auc": 0.816
+      }
+    }
+  }
+}

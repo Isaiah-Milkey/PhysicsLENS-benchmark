@@ -1,0 +1,3111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PhysicsLENS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #f7f6f3;
+  --surface: #ffffff;
+  --border:  #e0ddd6;
+  --text:    #1a1917;
+  --muted:   #7a7873;
+  --mono:    'IBM Plex Mono', monospace;
+  --sans:    'IBM Plex Sans', sans-serif;
+  --radius:  6px;
+  --s1: #1a54c4; --s1-bg: #eef3fd; --s1-bd: #c3d7f7;
+  --s2: #c05621; --s2-bg: #fff7ed; --s2-bd: #fed7aa;
+  --s3: #7c3aed; --s3-bg: #f5f3ff; --s3-bd: #ddd6fe;
+  --s4: #1a7a3c; --s4-bg: #edf7f1; --s4-bd: #c6e8d4;
+  --green: #1a7a3c; --green-bg: #edf7f1;
+  --amber: #9a6200; --amber-bg: #fdf5e6;
+  --red:   #b91c1c; --red-bg:   #fef2f2;
+  --blue:  #1a54c4; --blue-bg:  #eef3fd;
+}
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 15px; min-height: 100vh; }
+
+/* ── Topbar ── */
+.topbar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  height: 56px; display: flex; align-items: center; padding: 0 1.5rem; gap: 1.5rem;
+  position: sticky; top: 0; z-index: 10;
+}
+.logo { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0; }
+.stage-tabs { display: flex; gap: 6px; flex: 1; }
+.stage-tab {
+  display: flex; align-items: center; gap: 9px; padding: 7px 15px;
+  border-radius: var(--radius); border: 1.5px solid var(--border);
+  background: none; cursor: pointer; font-family: var(--sans);
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  transition: all 0.15s; white-space: nowrap;
+}
+.stage-tab.s1:hover { color: var(--s1); background: var(--s1-bg); border-color: var(--s1-bd); }
+.stage-tab.s2:hover { color: var(--s2); background: var(--s2-bg); border-color: var(--s2-bd); }
+.stage-tab.s3:hover { color: var(--s3); background: var(--s3-bg); border-color: var(--s3-bd); }
+.stage-tab.s4:hover { color: var(--s4); background: var(--s4-bg); border-color: var(--s4-bd); }
+.stage-tab.s1.active { background: var(--s1); border-color: var(--s1); color: #fff; }
+.stage-tab.s2.active { background: var(--s2); border-color: var(--s2); color: #fff; }
+.stage-tab.s3.active { background: var(--s3); border-color: var(--s3); color: #fff; }
+.stage-tab.s4.active { background: var(--s4); border-color: var(--s4); color: #fff; }
+.s-num {
+  width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.1); flex-shrink: 0;
+}
+.stage-tab:not(.active) .s-num { background: var(--border); color: var(--muted); }
+.s-label { display: flex; flex-direction: column; }
+.s-name  { font-size: 13px; font-weight: 500; line-height: 1.2; }
+.s-sub   { font-size: 11px; opacity: 0.75; line-height: 1.2; }
+.stage-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
+.stage-tab.has-results .stage-dot { opacity: 1; }
+
+.report-btn {
+  padding: 7px 15px; border: 1.5px solid var(--border); border-radius: var(--radius);
+  background: none; font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--muted); cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  display: flex; align-items: center; gap: 7px;
+}
+.report-btn:hover { border-color: var(--text); color: var(--text); }
+.report-btn.has-content { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.report-count { font-family: var(--mono); font-size: 11px; background: var(--green); color: #fff; padding: 1px 6px; border-radius: 3px; display: none; }
+.report-btn.has-content .report-count { display: inline; }
+
+/* ── Workspace ── */
+.workspace { display: grid; grid-template-columns: 370px 1fr; height: calc(100vh - 56px); }
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--surface); border-right: 4px solid var(--border);
+  display: flex; flex-direction: column; overflow-y: auto;
+  transition: border-right-color 0.2s;
+}
+.sidebar.s1 { border-right-color: var(--s1); }
+.sidebar.s2 { border-right-color: var(--s2); }
+.sidebar.s3 { border-right-color: var(--s3); }
+.sidebar.s4 { border-right-color: var(--s4); }
+
+/* ── Pinned video player ── */
+.vid-section { flex-shrink: 0; border-bottom: 1px solid var(--border); }
+.vid-drop {
+  height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; cursor: pointer; position: relative; background: #111; color: #555;
+  transition: background 0.15s;
+}
+.vid-drop:hover { background: #1a1a1a; }
+.vid-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.vid-drop-icon  { font-size: 28px; opacity: 0.4; }
+.vid-drop-text  { font-size: 13px; opacity: 0.5; }
+.vid-player { display: none; flex-direction: column; }
+.vid-player.show { display: flex; }
+.vid-el { width: 100%; height: 200px; object-fit: contain; background: #0d0d0d; display: block; }
+.vid-bar {
+  display: flex; align-items: center; gap: 9px; padding: 7px 12px;
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.vid-play { background: none; border: 1px solid var(--border); border-radius: var(--radius); width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; transition: background 0.12s; }
+.vid-play:hover { background: var(--bg); }
+.vid-time { font-family: var(--mono); font-size: 12px; color: var(--muted); flex-shrink: 0; min-width: 90px; }
+.vid-scrub { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+.vid-scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: var(--text); cursor: pointer; }
+.vid-speed { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 3px 7px; background: none; cursor: pointer; flex-shrink: 0; }
+.vid-namebar { display: flex; align-items: center; gap: 8px; padding: 5px 12px 6px; border-top: 1px solid var(--border); background: var(--bg); }
+.vid-name { flex: 1; min-width: 0; font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vid-change { flex-shrink: 0; font-size: 11px; color: var(--text); background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 2px 8px; cursor: pointer; transition: background 0.12s; }
+.vid-change:hover { background: var(--surface); }
+
+/* ── Stage info ── */
+.stage-info { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+.stage-info.s1 { background: var(--s1-bg); }
+.stage-info.s2 { background: var(--s2-bg); }
+.stage-info.s3 { background: var(--s3-bg); }
+.stage-info.s4 { background: var(--s4-bg); }
+.si-num  { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
+.si-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.si-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── Tests ── */
+.tests-section { padding: 1rem 1.25rem; flex: 1; }
+.section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.test-list { display: flex; flex-direction: column; gap: 6px; }
+.t-card {
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px;
+  cursor: pointer; transition: border-color 0.12s, background 0.12s; background: var(--surface);
+}
+.t-card:hover { border-color: #bbb; background: var(--bg); }
+.t-card.active { border-color: var(--active-c); background: var(--active-c); }
+.t-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; gap: 6px; }
+.t-name { font-size: 13px; font-weight: 500; }
+.t-card.active .t-name { color: #fff; }
+.t-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.t-card.active .t-desc { color: rgba(255,255,255,0.65); }
+.t-badges { display: flex; gap: 4px; flex-shrink: 0; }
+.t-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.03em; background: var(--bg); color: var(--muted); border: 1px solid var(--border); font-family: var(--mono); }
+.t-card.active .t-badge { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
+.t-badge-stub { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.05em; background: #fef9c3; color: #854d0e; border: 1px solid #fde047; font-family: var(--mono); }
+.t-card.dummy { border-style: dashed; }
+.t-card.dummy:hover { border-style: dashed; }
+.t-card.active.dummy { border-style: dashed; }
+
+/* ── Settings panel ── */
+.settings-section { padding: 0 1.25rem 1rem; border-bottom: 1px solid var(--border); display: none; }
+.settings-section.show { display: block; }
+.settings-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding-top: 1rem; }
+.setting-row { margin-bottom: 10px; }
+.setting-label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
+.setting-input, .setting-select {
+  width: 100%; padding: 7px 9px; border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 13px; font-family: var(--sans);
+  background: var(--bg); color: var(--text); outline: none;
+}
+.setting-input:focus, .setting-select:focus { border-color: var(--text); }
+
+/* ── Prompt ── */
+.prompt-section { padding: 0 1.25rem 1rem; display: none; }
+.prompt-section.show { display: block; }
+.prompt-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.prompt-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--sans); font-size: 13px; background: var(--bg); color: var(--text); }
+
+/* ── Run ── */
+.run-wrap { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+.run-btn {
+  width: 100%; padding: 10px; border: 1.5px solid var(--text); border-radius: var(--radius);
+  background: var(--text); color: #fff; font-family: var(--sans); font-size: 14px; font-weight: 500;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.15s;
+}
+.run-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.run-btn:not(:disabled):hover { opacity: 0.85; }
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+.run-btn.loading .spinner { display: block; }
+.run-btn.loading .btn-text { opacity: 0.6; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Main ── */
+.main { display: flex; flex-direction: column; overflow: hidden; }
+.tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+.tab-btn {
+  padding: 0 1.5rem; height: 46px; font-size: 13px; font-weight: 500; color: var(--muted);
+  border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 7px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: none; }
+.tab-btn.has-content .tab-dot { display: block; }
+.tab-panel { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+.tab-panel.active { display: flex; }
+
+/* ── Output ── */
+.output-pane { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.output-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--surface); flex-shrink: 0; }
+.output-title { font-size: 14px; font-weight: 500; }
+.status-pill { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 99px; letter-spacing: 0.06em; text-transform: uppercase; }
+.pill-idle    { background: var(--bg);       color: var(--muted); border: 1px solid var(--border); }
+.pill-running { background: var(--blue-bg);  color: var(--blue);  border: 1px solid var(--s1-bd); }
+.pill-done    { background: var(--green-bg); color: var(--green); border: 1px solid var(--s4-bd); }
+.pill-error   { background: var(--red-bg);   color: var(--red);   border: 1px solid #fecaca; }
+.output-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.log-pane { padding: 1rem 1.5rem; font-family: var(--mono); font-size: 13px; line-height: 2; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.log-line { display: flex; gap: 12px; }
+.log-ts { color: var(--muted); flex-shrink: 0; }
+.log-info    .log-msg { color: var(--muted); }
+.log-success .log-msg { color: var(--green); }
+.log-warn    .log-msg { color: var(--amber); }
+.log-error   .log-msg { color: var(--red); }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--muted); }
+.empty-icon  { font-size: 44px; opacity: 0.3; }
+.empty-text  { font-size: 14px; }
+.results-pane { padding: 1.5rem; display: none; flex-direction: column; gap: 1.25rem; }
+.results-pane.show { display: flex; }
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 15px; }
+.metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.metric-value { font-family: var(--mono); font-size: 20px; font-weight: 500; margin-bottom: 3px; }
+.metric-value.fail { color: var(--red); }
+.metric-value.pass { color: var(--green); }
+.metric-sub { font-size: 12px; color: var(--muted); }
+.severity-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; }
+.sev-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.sev-title { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.sev-val   { font-family: var(--mono); font-size: 14px; font-weight: 500; }
+.sev-track { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.sev-fill  { height: 100%; border-radius: 3px; width: 0; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.image-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.image-block img { width: 100%; display: block; }
+.image-caption { font-size: 12px; color: var(--muted); padding: 8px 13px; border-top: 1px solid var(--border); }
+.video-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.video-block video { width: 100%; display: block; background: #000; max-height: 440px; object-fit: contain; }
+
+/* ── Marker video viewer (Event Localizer) ── */
+.mv-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.mv-stage { position: relative; background: #0d0d0d; line-height: 0; }
+.mv-video { width: 100%; display: block; background: #000; max-height: 460px; object-fit: contain; }
+.mv-roi { position: absolute; border: 2px solid; border-radius: 3px; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0,0,0,0.12); transition: opacity 0.15s; opacity: 0; }
+.mv-roi.show { opacity: 1; }
+.mv-roi-tag { position: absolute; top: -20px; left: -2px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: #fff; padding: 1px 6px; border-radius: 3px 3px 0 0; white-space: nowrap; }
+.mv-empty-tag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #555; font-size: 13px; pointer-events: none; }
+.mv-controls { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-top: 1px solid var(--border); background: var(--surface); }
+.mv-btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); height: 32px; min-width: 32px; padding: 0 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text); flex-shrink: 0; transition: background 0.12s, border-color 0.12s; }
+.mv-btn:hover:not(:disabled) { background: var(--bg); border-color: #bbb; }
+.mv-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.mv-time { font-family: var(--mono); font-size: 12px; color: var(--muted); flex-shrink: 0; min-width: 92px; }
+.mv-counter { font-family: var(--mono); font-size: 12px; color: var(--muted); flex-shrink: 0; margin-left: auto; }
+
+/* Per-diagnostic lane timeline */
+.mv-lanes { position: relative; padding: 10px 12px 2px; }
+.mv-lane { display: flex; align-items: center; gap: 8px; height: 18px; margin-bottom: 5px; }
+.mv-lane:last-child { margin-bottom: 0; }
+.mv-lane-label { width: 132px; flex-shrink: 0; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; user-select: none; }
+.mv-lane-label:hover { color: var(--text); }
+.mv-lane-label .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.mv-chk { font-size: 12px; width: 13px; flex-shrink: 0; line-height: 1; }
+.mv-lane.off { opacity: 0.4; }
+.mv-grp.off { opacity: 0.4; }
+.mv-lane-track { position: relative; flex: 1; height: 14px; border-radius: 4px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; overflow: hidden; }
+.mv-seg { position: absolute; top: 0; bottom: 0; border-radius: 2px; opacity: 0.62; transition: opacity 0.12s; }
+.mv-seg:hover, .mv-seg.active { opacity: 1; }
+.mv-ph { position: absolute; width: 2px; background: var(--text); pointer-events: none; z-index: 6; transform: translateX(-1px); }
+.mv-axis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 4px 1px 0; margin-left: 140px; }
+.mv-list { display: flex; flex-direction: column; max-height: 200px; overflow-y: auto; border-top: 1px solid var(--border); }
+.mv-grp-hdr { display: flex; align-items: center; gap: 7px; padding: 7px 12px 5px; font-size: 11px; font-weight: 600; color: var(--text); background: var(--bg); border-bottom: 1px solid var(--border); }
+.mv-grp-hdr .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.mv-grp-count { font-family: var(--mono); font-weight: 400; color: var(--muted); }
+.mv-row { display: flex; align-items: center; gap: 10px; padding: 7px 12px 7px 22px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.12s; }
+.mv-row:last-child { border-bottom: none; }
+.mv-row:hover { background: var(--bg); }
+.mv-row.active { background: var(--blue-bg); }
+.mv-row-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.mv-row-idx { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 26px; }
+.mv-row-label { font-size: 13px; flex: 1; }
+.mv-row-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; }
+.mv-row-sev { font-family: var(--mono); font-size: 11px; font-weight: 600; min-width: 30px; text-align: right; flex-shrink: 0; }
+.mv-none { padding: 14px 12px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+
+/* ── Test Report Footer (shown after run in output tab) ── */
+.test-report-footer {
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; background: var(--surface); display: none;
+}
+.test-report-footer.show { display: block; }
+.trf-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg);
+}
+.trf-title { font-size: 13px; font-weight: 500; }
+.trf-actions { display: flex; gap: 8px; align-items: center; }
+.exclude-btn {
+  font-size: 12px; padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: none; cursor: pointer;
+  color: var(--muted); font-family: var(--sans); transition: all 0.15s;
+}
+.exclude-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+.exclude-btn.active { background: var(--red-bg); border-color: #fecaca; color: var(--red); }
+.trf-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.trf-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 5px; }
+.trf-textarea {
+  width: 100%; min-height: 72px; padding: 9px 11px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-family: var(--sans); font-size: 13px; color: var(--text);
+  background: var(--bg); resize: vertical; outline: none;
+}
+.trf-textarea:focus { border-color: var(--text); }
+.trf-footer-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.trf-hint { font-size: 12px; color: var(--muted); }
+.trf-save {
+  padding: 6px 16px; border: 1.5px solid var(--text); border-radius: var(--radius);
+  background: var(--text); color: #fff; font-family: var(--sans); font-size: 12px;
+  font-weight: 500; cursor: pointer; transition: opacity 0.15s;
+}
+.trf-save:hover { opacity: 0.8; }
+.trf-saved { font-size: 12px; color: var(--green); display: none; }
+.trf-saved.show { display: inline; }
+
+/* ── Report tab ── */
+.report-pane { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.report-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--muted); }
+.report-content { flex: 1; display: flex; flex-direction: column; }
+
+/* Report header */
+.rpt-header {
+  padding: 14px 24px; border-bottom: 1px solid var(--border);
+  background: var(--surface); display: flex; align-items: center;
+  justify-content: space-between; gap: 16px; flex-shrink: 0; position: sticky; top: 0; z-index: 5;
+}
+.rpt-header-left { display: flex; flex-direction: column; gap: 3px; }
+.rpt-main-title { font-size: 14px; font-weight: 500; }
+.rpt-subtitle { font-size: 12px; color: var(--muted); }
+.rpt-header-right { display: flex; gap: 8px; align-items: center; }
+.rpt-detail-btn {
+  font-size: 12px; padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: none; cursor: pointer;
+  font-family: var(--sans); color: var(--muted); transition: all 0.15s;
+}
+.rpt-detail-btn:hover { border-color: var(--text); color: var(--text); }
+.rpt-detail-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+/* Stage group in report */
+.rsg {
+  border-bottom: 1px solid var(--border);
+}
+.rsg-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 24px; background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.rsg-num {
+  width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+}
+.rsg-name { font-size: 13px; font-weight: 500; }
+.rsg-sub  { font-size: 12px; color: var(--muted); }
+.rsg-count { margin-left: auto; font-size: 11px; color: var(--muted); background: var(--border); padding: 2px 8px; border-radius: 3px; font-family: var(--mono); }
+
+/* Individual test entry in report */
+.rte { border-bottom: 1px solid var(--border); }
+.rte:last-child { border-bottom: none; }
+.rte-summary {
+  display: flex; align-items: center; gap: 12px; padding: 11px 24px;
+  cursor: pointer; transition: background 0.12s; user-select: none;
+}
+.rte-summary:hover { background: var(--bg); }
+.rte-toggle-icon { font-size: 10px; color: var(--muted); transition: transform 0.2s; flex-shrink: 0; }
+.rte-toggle-icon.open { transform: rotate(90deg); }
+.rte-name { font-size: 13px; font-weight: 500; flex: 1; }
+.rte-excluded .rte-name { text-decoration: line-through; color: var(--muted); }
+.rte-sev-row { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.rte-sev-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.rte-sev-pct { font-family: var(--mono); font-size: 12px; min-width: 36px; text-align: right; }
+.rte-status-pill { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px; letter-spacing: 0.05em; text-transform: uppercase; }
+.rte-excl-tag { font-size: 10px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 2px 7px; border-radius: 3px; flex-shrink: 0; }
+.rte-comment-preview { font-size: 11px; color: var(--muted); background: var(--amber-bg); padding: 2px 8px; border-radius: 3px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
+.rte-ts { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; }
+
+/* Detail panel inside report entry */
+.rte-detail { display: none; padding: 0 24px 20px; }
+.rte-detail.show { display: block; }
+.rte-detail-inner { display: flex; flex-direction: column; gap: 1rem; padding-top: 14px; }
+.rte-comment-block { background: var(--amber-bg); border: 1px solid #e9d8a6; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--amber); }
+.rte-comment-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; opacity: 0.7; }
+
+/* ── History panel ── */
+.hist-panel { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+.hist-empty  { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--muted); }
+.hist-pane   { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 8px; }
+.hist-entry  { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.hist-entry-hdr { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; transition: background 0.12s; user-select: none; }
+.hist-entry-hdr:hover { background: var(--bg); }
+.hist-idx   { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 24px; }
+.hist-name  { font-size: 13px; font-weight: 500; flex: 1; }
+.hist-ts    { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.hist-chevron { font-size: 9px; color: var(--muted); transition: transform 0.15s; }
+.hist-chevron.open { transform: rotate(90deg); }
+.hist-body  { display: none; border-top: 1px solid var(--border); padding: 14px; }
+.hist-body.show { display: block; }
+
+/* ── Global report modal ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: flex-start; justify-content: center; padding: 2rem; overflow-y: auto; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: var(--surface); border-radius: 8px; width: 100%; max-width: 900px; display: flex; flex-direction: column; max-height: calc(100vh - 4rem); overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.modal-hdr  { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.modal-title { font-size: 15px; font-weight: 500; }
+.modal-close { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 14px; cursor: pointer; font-size: 13px; color: var(--muted); font-family: var(--sans); }
+.modal-close:hover { border-color: var(--text); color: var(--text); }
+.modal-body  { overflow-y: auto; flex: 1; }
+
+/* ── Home / breadcrumb button (single unified Dataset view) ── */
+.ds-home-btn {
+  padding: 7px 14px; border: 1.5px solid var(--border); border-radius: var(--radius);
+  background: none; font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+}
+.ds-home-btn:hover { color: var(--text); border-color: var(--text); background: var(--bg); }
+.ds-home-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+.ds-crumb { display: none; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; flex-shrink: 1; }
+body.mode-ds-detail .ds-crumb { display: inline-block; }
+/* In detail view the home button reads as a back affordance, not the active tab. */
+body.mode-ds-detail .ds-home-btn { background: none; color: var(--s2); border-color: var(--s2-bd); }
+body.mode-ds-detail .ds-home-btn:hover { background: var(--s2-bg); }
+
+/* ── Dataset / batch view ── */
+.dataset-view { display: none; grid-template-columns: 340px 1fr; height: calc(100vh - 56px); }
+body.mode-dataset .workspace { display: none; }
+body.mode-dataset .dataset-view { display: grid; }
+body.mode-dataset #stageTabs, body.mode-dataset #reportBtn { display: none; }
+
+/* ── Dataset detail (per-video stage view) ── */
+body.mode-ds-detail .dataset-view  { display: none; }
+body.mode-ds-detail .workspace     { display: grid; }
+body.mode-ds-detail #reportBtn     { display: none; }
+body.mode-ds-detail .vid-drop      { display: none !important; }
+body.mode-ds-detail #vidPlayer     { display: none !important; }
+body.mode-ds-detail #dsDetailPlayer{ display: flex !important; flex-direction: column; }
+
+/* Result indicator on test cards in the detail view */
+.t-result-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; box-shadow: 0 0 0 2px var(--surface); }
+
+.ds-sidebar { background: var(--surface); border-right: 4px solid var(--s2); display: flex; flex-direction: column; overflow-y: auto; }
+.ds-block { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+.ds-step { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+
+.ds-src-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.ds-src-tab { flex: 1; padding: 7px; border: 1px solid var(--border); border-radius: var(--radius); background: none; font-family: var(--sans); font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.ds-src-tab.active { background: var(--s2-bg); border-color: var(--s2-bd); color: var(--s2); font-weight: 500; }
+.ds-src-panel { display: none; }
+.ds-src-panel.active { display: block; }
+
+.ds-drop { position: relative; border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 26px 12px; text-align: center; cursor: pointer; transition: all 0.15s; background: var(--bg); }
+.ds-drop:hover, .ds-drop.drag { border-color: var(--s2); background: var(--s2-bg); }
+.ds-drop > input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.ds-drop-icon { font-size: 24px; color: var(--muted); }
+.ds-drop-text { font-size: 13px; color: var(--text); margin-top: 6px; }
+.ds-drop-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.ds-folder-link { color: var(--s2); text-decoration: underline; cursor: pointer; position: relative; z-index: 2; }
+
+.ds-fetch-btn { width: 100%; margin-top: 12px; padding: 8px; border: 1.5px solid var(--s2); border-radius: var(--radius); background: var(--s2); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+.ds-fetch-btn:hover { opacity: 0.85; }
+.ds-fetch-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.ds-hf-status { font-size: 12px; color: var(--muted); margin-top: 8px; min-height: 16px; line-height: 1.4; }
+.ds-hf-status.err { color: var(--red); }
+
+.ds-pipe-actions { display: flex; gap: 6px; margin-bottom: 4px; }
+.ds-mini { font-size: 11px; padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: none; color: var(--muted); cursor: pointer; font-family: var(--sans); transition: all 0.15s; }
+.ds-mini:hover { border-color: var(--text); color: var(--text); }
+.bm-toggle .bm-mode.active { background: var(--text); color: #fff; }
+.bm-toggle .bm-mode:not(.active):hover { background: var(--bg); }
+.ds-pipe-list { display: flex; flex-direction: column; gap: 1px; }
+.ds-pipe-stage { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin: 11px 0 3px; }
+.ds-pipe-row { display: flex; align-items: center; gap: 9px; padding: 5px 6px; border-radius: 4px; transition: background 0.12s; }
+.ds-pipe-row:hover { background: var(--bg); }
+.ds-pipe-main { display: flex; align-items: center; gap: 9px; flex: 1; cursor: pointer; min-width: 0; }
+.ds-pipe-row input { accent-color: var(--s2); cursor: pointer; flex-shrink: 0; }
+.ds-pipe-name { font-size: 13px; flex: 1; min-width: 0; }
+.ds-pipe-badge { font-size: 10px; font-family: var(--mono); color: var(--muted); }
+.ds-pipe-gear { font-size: 12px; color: var(--muted); background: none; border: 1px solid transparent; cursor: pointer; padding: 2px 5px; border-radius: 4px; flex-shrink: 0; line-height: 1; }
+.ds-pipe-gear:hover { color: var(--text); border-color: var(--border); }
+.ds-pipe-gear.on { color: var(--s2); border-color: var(--s2); }
+.ds-pipe-settings { display: none; padding: 8px 8px 10px 24px; margin: 0 0 4px; border-left: 2px solid var(--border); }
+.ds-pipe-settings.show { display: block; }
+.ds-pipe-settings .setting-row { margin-bottom: 8px; }
+.ds-pipe-settings .setting-label { font-size: 11px; }
+.ds-pipe-settings .setting-input, .ds-pipe-settings .setting-select { font-size: 12px; padding: 5px 7px; }
+.ds-set-note { font-size: 10px; color: var(--muted); margin: 2px 0 8px; line-height: 1.4; }
+.ds-set-reset { font-size: 10px; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 9px; cursor: pointer; font-family: var(--sans); }
+.ds-set-reset:hover { color: var(--text); border-color: var(--text); }
+.ds-route-box { background: var(--bg); border: 1px dashed var(--border); border-radius: 6px; padding: 9px 10px; margin-bottom: 10px; }
+.ds-route-box .setting-label { color: var(--s2); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; }
+
+.ds-run-wrap { padding: 1rem 1.25rem; margin-top: auto; }
+.ds-progress-wrap { margin-top: 12px; }
+.ds-progress-track { height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+.ds-progress-fill { height: 100%; width: 0; background: var(--s2); transition: width 0.3s; }
+.ds-progress-text { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; margin-top: 5px; }
+
+.ds-main { display: flex; flex-direction: column; overflow: hidden; }
+.ds-main-hdr { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+.ds-main-title { font-size: 14px; font-weight: 500; }
+.ds-grid-wrap { flex: 1; overflow-y: auto; position: relative; }
+.ds-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--muted); text-align: center; padding: 2rem; }
+.ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; padding: 1.5rem; }
+
+.ds-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; }
+.ds-card:hover { border-color: var(--s2); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+.ds-card-thumb { width: 100%; aspect-ratio: 16/10; object-fit: contain; background: #0d0d0d; display: block; }
+.ds-card-body { padding: 9px 11px; display: flex; flex-direction: column; gap: 6px; }
+.ds-card-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.ds-status { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; }
+.ds-status.queued  { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+.ds-status.running { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--s1-bd); }
+.ds-status.done    { background: var(--green-bg); color: var(--green); border: 1px solid var(--s4-bd); }
+.ds-status.error   { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
+.ds-sev-chip { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 3px; color: #fff; }
+.ds-card-dots { display: flex; gap: 3px; flex-wrap: wrap; }
+.ds-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.ds-thumb-fallback { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #777; }
+.ds-fb-icon { font-size: 26px; opacity: 0.55; }
+.ds-fb-ext { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: #8a8a8a; }
+</style>
+</head>
+<body class="mode-dataset">
+
+<div class="topbar">
+  <span class="logo">PhysicsLENS</span>
+  <button class="ds-home-btn active" id="dsHomeBtn">Dataset</button>
+  <span class="ds-crumb" id="dsCrumb"></span>
+  <nav class="stage-tabs" id="stageTabs"></nav>
+  <label class="ds-mini ds-export-visuals-label" title="Include images/plots/marker-videos in the export (larger files)">
+    <input type="checkbox" id="dsExportVisuals" style="margin-right:5px;vertical-align:-2px" />Include visuals
+  </label>
+  <button class="ds-mini" id="dsExportBtn" title="Export saved run(s) as a JSON file you can re-import later">Export ⭳</button>
+  <button class="ds-mini" id="dsImportBtn" title="Load a previously exported run/batch JSON back into the Dataset view">Import ⭱</button>
+  <input type="file" id="dsImportFile" accept="application/json" hidden />
+  <button class="ds-mini" id="dsBenchmarkBtn" title="Compare severities across every loaded video and pipeline">Benchmark</button>
+  <button class="report-btn" id="reportBtn">
+    Full Report <span class="report-count" id="reportCount">0</span>
+  </button>
+</div>
+
+<div class="workspace">
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Pinned video player -->
+    <div class="vid-section">
+      <div class="vid-drop" id="vidDrop">
+        <input type="file" id="videoFile" accept="video/*" />
+        <div class="vid-drop-icon">▶</div>
+        <div class="vid-drop-text">Click or drag a video here</div>
+      </div>
+      <div class="vid-player" id="vidPlayer">
+        <video class="vid-el" id="vidEl" preload="metadata"></video>
+        <div class="vid-bar">
+          <button class="vid-play" id="btnPlay">▶</button>
+          <span class="vid-time" id="vidTime">0:00 / 0:00</span>
+          <input type="range" class="vid-scrub" id="vidScrub" min="0" value="0" step="0.01" />
+          <select class="vid-speed" id="vidSpeed">
+            <option value="0.25">0.25×</option>
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+        </div>
+        <div class="vid-namebar">
+          <span class="vid-name" id="vidName"></span>
+          <button class="vid-change" id="btnChangeVid" title="Choose a different video">↻ Change</button>
+        </div>
+      </div>
+
+      <!-- Dataset detail player (shown in mode-ds-detail) -->
+      <div id="dsDetailPlayer" style="display:none; flex-direction:column;">
+        <video class="vid-el" id="dsDetailVid" preload="metadata"></video>
+        <div class="vid-bar">
+          <button class="vid-play" id="dsBtnPlay">▶</button>
+          <span class="vid-time" id="dsVidTime">0:00 / 0:00</span>
+          <input type="range" class="vid-scrub" id="dsVidScrub" min="0" value="0" step="0.01" />
+          <select class="vid-speed" id="dsVidSpeed">
+            <option value="0.25">0.25×</option>
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+        </div>
+        <div class="vid-name" id="dsDetailName"></div>
+      </div>
+    </div>
+
+    <!-- Stage info -->
+    <div class="stage-info" id="stageInfo">
+      <div class="si-num">Select a stage above</div>
+    </div>
+
+    <!-- Tests -->
+    <div class="tests-section">
+      <div class="section-title">Tests</div>
+      <div class="test-list" id="testList">
+        <div style="font-size:13px;color:var(--muted)">Select a stage above.</div>
+      </div>
+    </div>
+
+    <!-- Settings (per-test) -->
+    <div class="settings-section" id="settingsSection">
+      <div class="settings-title">Settings</div>
+      <div id="settingsForm"></div>
+    </div>
+
+    <!-- Prompt (sam_track) -->
+    <div class="prompt-section" id="promptSection">
+      <div class="prompt-label">Object to segment</div>
+      <input class="prompt-input" id="promptInput" placeholder='e.g. "the ball"' />
+    </div>
+
+    <div class="run-wrap">
+      <button class="run-btn" id="runBtn" disabled>
+        <div class="spinner"></div>
+        <span class="btn-text">Run test</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="report">Report <span class="tab-dot"></span></button>
+      <button class="tab-btn" data-tab="history">Previous Reports <span class="tab-dot"></span></button>
+    </div>
+
+    <!-- Report tab (per-test current result) -->
+    <div class="tab-panel active" data-panel="report">
+      <div class="output-pane">
+        <div class="output-header">
+          <span class="output-title" id="outputTitle">Output</span>
+          <span class="status-pill pill-idle" id="statusPill">Idle</span>
+        </div>
+        <div class="output-body">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon">⬡</div>
+            <div class="empty-text">Select a test and run it.</div>
+          </div>
+          <div class="log-pane" id="logPane" style="display:none"></div>
+          <div class="results-pane" id="resultsPane">
+            <div class="metrics-grid" id="metricsGrid"></div>
+            <div class="severity-block" id="severityBlock" style="display:none">
+              <div class="sev-header">
+                <span class="sev-title" id="sevTitle">—</span>
+                <span class="sev-val" id="sevVal">—</span>
+              </div>
+              <div class="sev-track"><div class="sev-fill" id="sevFill"></div></div>
+            </div>
+            <div id="imageBlocks"></div>
+
+            <!-- Test-specific report footer -->
+            <div class="test-report-footer" id="testReportFooter">
+              <div class="trf-header">
+                <span class="trf-title">Test Report</span>
+                <div class="trf-actions">
+                  <button class="exclude-btn" id="excludeBtn">Exclude from main report</button>
+                </div>
+              </div>
+              <div class="trf-body">
+                <div>
+                  <label class="trf-label">Analyst Notes</label>
+                  <textarea class="trf-textarea" id="commentInput" placeholder="Add notes, observations, or conclusions about this test result…"></textarea>
+                </div>
+                <div class="trf-footer-row">
+                  <span class="trf-hint">This note will appear in the main report.</span>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="trf-saved" id="trfSaved">✓ Saved</span>
+                    <button class="trf-save" id="saveCommentBtn">Save Note</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Previous Reports tab (per-test history) -->
+    <div class="tab-panel" data-panel="history">
+      <div class="hist-panel">
+        <div class="hist-empty" id="histEmpty">
+          <div class="empty-icon">⬡</div>
+          <div class="empty-text">Select a test to see its history.</div>
+        </div>
+        <div class="hist-pane" id="histPane" style="display:none"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Dataset / batch view -->
+<div class="dataset-view" id="datasetView">
+  <aside class="ds-sidebar">
+
+    <!-- 1 · Source -->
+    <div class="ds-block">
+      <div class="ds-step">1 · Add videos</div>
+      <div class="ds-src-tabs">
+        <button class="ds-src-tab active" data-src="upload">Upload</button>
+        <button class="ds-src-tab" data-src="hf">HuggingFace</button>
+      </div>
+
+      <div class="ds-src-panel active" data-src="upload">
+        <div class="ds-drop" id="dsDrop">
+          <input type="file" id="dsFiles" accept="video/*,image/gif" multiple />
+          <div class="ds-drop-icon">⬆</div>
+          <div class="ds-drop-text">Click or drag videos here</div>
+          <div class="ds-drop-sub">any format · or <label class="ds-folder-link" for="dsFolder">choose a folder</label></div>
+          <input type="file" id="dsFolder" webkitdirectory directory multiple hidden />
+        </div>
+      </div>
+
+      <div class="ds-src-panel" data-src="hf">
+        <label class="setting-label">Dataset repo id</label>
+        <input class="setting-input" id="hfRepo" placeholder="e.g. user/physics-gifs" />
+        <label class="setting-label" style="margin-top:8px">Subfolder (optional)</label>
+        <input class="setting-input" id="hfSub" placeholder="e.g. data/test" />
+        <label class="setting-label" style="margin-top:8px">Max files (0 = all)</label>
+        <input class="setting-input" id="hfMax" type="number" min="0" value="50" />
+        <label class="setting-label" style="margin-top:8px">HF token (gated/private — optional)</label>
+        <input class="setting-input" id="hfToken" type="password" placeholder="hf_…" />
+        <button class="ds-fetch-btn" id="hfFetchBtn">Download video files</button>
+        <div class="ds-hf-status" id="hfStatus"></div>
+      </div>
+    </div>
+
+    <!-- 2 · Tests -->
+    <div class="ds-block">
+      <div class="ds-step">2 · Select tests <span id="dsCustomCount" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--s2);font-size:10px;margin-left:4px"></span></div>
+      <div class="ds-pipe-actions">
+        <button class="ds-mini" id="dsPipeAll">Select all</button>
+        <button class="ds-mini" id="dsPipeNone">Clear</button>
+      </div>
+      <div class="ds-set-note" style="margin:2px 0 6px">Click ⚙ on a test to pick its model or tune its settings for this batch.</div>
+      <div class="ds-pipe-list" id="dsPipeList"></div>
+    </div>
+
+    <!-- 3 · API keys (session-only, not saved) -->
+    <div class="ds-block">
+      <details id="batchKeyDetails">
+        <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px">
+          <span class="ds-step" style="margin:0">3 · API keys <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></span>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">▾</span>
+        </summary>
+        <div style="margin-top:10px">
+          <label class="setting-label">OpenAI API key</label>
+          <input class="setting-input" id="batchOpenaiKey" type="password" autocomplete="off" placeholder="blank = use server .env" />
+          <label class="setting-label" style="margin-top:8px">OpenRouter key</label>
+          <input class="setting-input" id="batchOpenrouterKey" type="password" autocomplete="off" placeholder="blank = use server .env" />
+          <div class="ds-hf-status" id="batchKeyStatus" style="margin-top:8px"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">
+            🔒 Held in this browser tab only for the session — never saved to disk, never exported.
+            Applied to each test based on its model's provider; blank falls back to the server's <code>.env</code>.
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- 4 · Run -->
+    <div class="ds-run-wrap">
+      <button class="run-btn" id="dsRunBtn" disabled>
+        <div class="spinner"></div>
+        <span class="btn-text">Run batch</span>
+      </button>
+      <div class="ds-progress-wrap" id="dsProgressWrap" style="display:none">
+        <div class="ds-progress-track"><div class="ds-progress-fill" id="dsProgressFill"></div></div>
+        <div class="ds-progress-text" id="dsProgressText">0 / 0</div>
+        <div class="ds-run-ctrls" id="dsRunCtrls" style="display:none;gap:6px;margin-top:8px">
+          <button class="ds-mini" id="dsPauseBtn">⏸ Pause</button>
+          <button class="ds-mini" id="dsResumeBtn" style="display:none">▶ Resume</button>
+          <button class="ds-mini" id="dsAbortBtn" style="color:#c0392b;border-color:#c0392b">✕ Abort</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="ds-main">
+    <div class="ds-main-hdr">
+      <span class="ds-main-title" id="dsMainTitle">No videos loaded</span>
+      <button class="ds-mini" id="dsClearBtn" style="display:none">Clear all</button>
+    </div>
+    <div class="ds-grid-wrap">
+      <div class="ds-empty" id="dsEmpty">
+        <div class="empty-icon">⬡</div>
+        <div class="empty-text">Add videos or a HuggingFace dataset, pick tests, then run the batch.<br>Each video gets its own report.</div>
+      </div>
+      <div class="ds-grid" id="dsGrid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Per-video report modal -->
+<!-- Global Full Report modal -->
+<div class="modal-overlay" id="globalReportModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <span class="modal-title">Full Report</span>
+      <button class="modal-close" id="modalClose">Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="report-pane">
+        <div class="report-empty" id="reportEmpty">
+          <div class="empty-icon">⬡</div>
+          <div class="empty-text">No results yet. Run any test to build the report.</div>
+        </div>
+        <div class="report-content" id="reportContent" style="display:none">
+          <div id="reportHeader"></div>
+          <div id="reportStages"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cross-video benchmark table modal -->
+<div class="modal-overlay" id="benchmarkModal">
+  <div class="modal-box" style="max-width:min(1200px,92vw)">
+    <div class="modal-hdr">
+      <span class="modal-title" id="benchmarkTitle">Benchmark — Severity by Video × Pipeline</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="bm-toggle" style="display:inline-flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <button class="ds-mini bm-mode active" data-mode="severity" style="border:none;border-radius:0">Severity</button>
+          <button class="ds-mini bm-mode" data-mode="duration" style="border:none;border-radius:0">Run time</button>
+          <button class="ds-mini bm-mode" data-mode="gpu" style="border:none;border-radius:0">GPU</button>
+        </div>
+        <button class="modal-close" id="benchmarkModalClose">Close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="benchmarkEmpty" class="report-empty">
+        <div class="empty-icon">⬡</div>
+        <div class="empty-text">No videos loaded. Run a batch or import a saved one first.</div>
+      </div>
+      <div id="benchmarkWrap" style="display:none;overflow-x:auto">
+        <table id="benchmarkTable" style="border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Derive the API base from however the page was loaded (localhost, system IP,
+// or SSH tunnel) — the backend serves this page, so same-origin always works.
+const API = window.location.origin;
+
+const STAGES = [
+  { id: 'screening',    cls: 's1', num: 1, name: 'Screening',              subtitle: 'Triage & Vital Signs',    color: '#1a54c4', desc: 'Rapidly identify suspicious regions that may contain physics violations.',              pipelines: ['s1_temporal', 's1_optical_flow', 's1_camera_motion', 's1_embeddings', 's1_vlm'] },
+  { id: 'differential', cls: 's2', num: 2, name: 'Differential Diagnosis', subtitle: 'Primary Care Evaluation', color: '#c05621', desc: 'Localise failures and generate ranked physics hypotheses before expensive specialist tests.', pipelines: ['s2_object_tracker', 's2_trajectory_extractor', 's2_event_localizer', 's2_hypothesis_generator'] },
+  { id: 'specialist',   cls: 's3', num: 3, name: 'VLM Verification',  subtitle: 'Targeted Questions',     color: '#7c3aed', desc: 'Targeted VLM questions on the frames: which failure type (one forced choice over all families), was the task completed, and — if a property is stated — was it followed.',  pipelines: ['s3_specialist'] },
+  { id: 'final',        cls: 's4', num: 4, name: 'Final Diagnosis',         subtitle: 'Treatment Plan',          color: '#1a7a3c', desc: 'Deliver a comprehensive and interpretable physics assessment with recommendations.',       pipelines: ['s4_report'] },
+];
+const STAGE_MAP = Object.fromEntries(STAGES.map(s => [s.id, s]));
+const STAGE_COLORS = { s1: '#1a54c4', s2: '#c05621', s3: '#7c3aed', s4: '#1a7a3c' };
+
+let allPipelines = {}, selectedStage = null, selectedPipeline = null;
+let videoFile = null, reportData = [], lastEntry = null, showDetails = false;
+let dsDetailVideo = null;  // set when viewing a dataset video in the stage detail view
+// Stage 1 anomaly signals, keyed by source id — forwarded into the Event Localizer.
+let stage1SignalStore = {};
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
+function switchTab(name) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.dataset.panel === name));
+}
+document.getElementById("reportBtn").addEventListener("click", () => { renderReport(); document.getElementById("globalReportModal").classList.add("show"); });
+document.getElementById("modalClose").addEventListener("click", () => document.getElementById("globalReportModal").classList.remove("show"));
+document.getElementById("globalReportModal").addEventListener("click", e => { if (e.target.id === "globalReportModal") document.getElementById("globalReportModal").classList.remove("show"); });
+
+// ── Load pipelines ────────────────────────────────────────────────────────────
+async function loadPipelines() {
+  try {
+    const list = await fetch(`${API}/pipelines`).then(r => r.json());
+    list.forEach(p => { allPipelines[p.id] = p; });
+    renderStageTabs();
+    selectStage(STAGES[0]);
+    renderDsPipeList();   // build the dataset-mode test checklist too
+  } catch {
+    document.getElementById("testList").innerHTML = '<div style="font-size:13px;color:var(--red)">Could not reach backend.</div>';
+  }
+}
+
+// ── Stage tabs ─────────────────────────────────────────────────────────────────
+function renderStageTabs() {
+  const nav = document.getElementById("stageTabs");
+  nav.innerHTML = "";
+  STAGES.forEach(stage => {
+    const btn = document.createElement("button");
+    btn.className = `stage-tab ${stage.cls}`;
+    btn.dataset.stageId = stage.id;
+    btn.innerHTML = `<span class="s-num">${stage.num}</span>
+      <span class="s-label"><span class="s-name">${stage.name}</span><span class="s-sub">${stage.subtitle}</span></span>
+      <span class="stage-dot"></span>`;
+    btn.addEventListener("click", () => selectStage(stage));
+    nav.appendChild(btn);
+  });
+}
+
+function selectStage(stage) {
+  selectedStage = stage;
+  selectedPipeline = null;
+
+  document.querySelectorAll(".stage-tab").forEach(t =>
+    t.classList.toggle("active", t.dataset.stageId === stage.id));
+
+  const sidebar = document.getElementById("sidebar");
+  sidebar.className = `sidebar ${stage.cls}`;
+
+  const info = document.getElementById("stageInfo");
+  info.className = `stage-info ${stage.cls}`;
+  info.innerHTML = `<div class="si-num">Stage ${stage.num}</div>
+    <div class="si-name">${stage.name}</div>
+    <div class="si-desc">${stage.subtitle} — ${stage.desc}</div>`;
+
+  const list = document.getElementById("testList");
+  list.innerHTML = "";
+  const pipes = stage.pipelines.map(id => allPipelines[id]).filter(Boolean);
+  let autoSel = null;   // first test in this stage that already has a result (detail view)
+  if (!pipes.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted)">No tests available.</div>';
+  } else {
+    pipes.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "t-card" + (p.dummy ? " dummy" : "");
+      card.dataset.id = p.id;
+      const stubBadge = p.dummy ? `<span class="t-badge-stub">STUB</span>` : "";
+      card.innerHTML = `<div class="t-card-header">
+          <span class="t-name">${p.name}</span>
+          <div class="t-badges">${stubBadge}<span class="t-badge">${p.badge}</span></div>
+        </div>
+        <div class="t-desc">${p.desc}</div>`;
+      // In the per-video detail view, surface which tests already ran so the user
+      // sees results without hunting — and remember the first to auto-open it.
+      if (dsDetailVideo) {
+        const runs = (dsDetailVideo.runs || []).filter(e => e.pipelineId === p.id);
+        if (runs.length) {
+          markTestCardResult(card, runs[runs.length - 1]);
+          if (!autoSel) autoSel = { card, p };
+        }
+      }
+      card.addEventListener("click", () => selectTest(card, p, stage));
+      list.appendChild(card);
+    });
+  }
+
+  document.getElementById("promptSection").classList.remove("show");
+  document.getElementById("settingsSection").classList.remove("show");
+  updateRunBtn();
+
+  // Auto-load the first completed test's report so opening a video shows results
+  // immediately instead of an empty pane.
+  if (autoSel) selectTest(autoSel.card, autoSel.p, stage);
+}
+
+// Adds (or refreshes) the colored result dot on a test card from its latest run.
+function markTestCardResult(card, entry) {
+  card.classList.add("has-result");
+  const badges = card.querySelector(".t-badges");
+  if (!badges) return;
+  let dot = badges.querySelector(".t-result-dot");
+  if (!dot) { dot = document.createElement("span"); dot.className = "t-result-dot"; badges.prepend(dot); }
+  const sev = entry.severities && entry.severities[0];
+  dot.style.background = sev ? sev.color : "var(--muted)";
+  dot.title = entry.status === "error" ? "Error" : sev ? `${sev.value}%` : "Done";
+}
+
+function selectTest(card, p, stage) {
+  document.querySelectorAll(".t-card").forEach(c => { c.classList.remove("active"); c.style.removeProperty("--active-c"); });
+  card.classList.add("active");
+  card.style.setProperty("--active-c", STAGE_COLORS[stage.cls]);
+  selectedPipeline = p;
+  document.getElementById("promptSection").classList.toggle("show", !!p.requires_prompt);
+  renderSettings(p.settings || []);
+  updateRunBtn();
+  restoreLatestOrClear(p.id);
+  renderPipelineHistory(p.id);
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────────
+function renderSettings(defs) {
+  const section = document.getElementById("settingsSection");
+  const form    = document.getElementById("settingsForm");
+  if (!defs || !defs.length) { section.classList.remove("show"); return; }
+  section.classList.add("show");
+  buildSettingsFields(form, defs, {});
+}
+
+// Build a settings form into any container. `values` (optional) pre-fills fields,
+// falling back to each def's `default`. Every control carries data-sid=<id> so
+// readSettingsFields() can read it back. Shared by the single-video settings
+// panel and the per-tool batch settings panels.
+function buildSettingsFields(container, defs, values) {
+  values = values || {};
+  container.innerHTML = "";
+  (defs || []).forEach(s => {
+    const row = document.createElement("div"); row.className = "setting-row";
+    const lbl = document.createElement("label"); lbl.className = "setting-label"; lbl.textContent = s.label;
+    row.appendChild(lbl);
+    const has = Object.prototype.hasOwnProperty.call(values, s.id);
+    const val = has ? values[s.id] : s.default;
+    let el;
+    if (s.type === "select") {
+      el = document.createElement("select"); el.className = "setting-select";
+      (s.options || []).forEach(opt => {
+        const o = document.createElement("option"); o.value = opt.value; o.textContent = opt.label;
+        if (opt.value == val) o.selected = true;
+        el.appendChild(o);
+      });
+    } else {
+      el = document.createElement("input"); el.className = "setting-input";
+      el.type  = s.type === "password" ? "password" : s.type === "number" ? "number" : "text";
+      el.value = val ?? "";
+      if (s.min !== undefined) el.min  = s.min;
+      if (s.max !== undefined) el.max  = s.max;
+      if (s.type === "number") el.step = "any";
+      if (s.type === "password") el.placeholder = "sk-or-…";
+    }
+    el.dataset.sid = s.id;
+    row.appendChild(el); container.appendChild(row);
+  });
+}
+
+// Read a settings form built by buildSettingsFields back into a plain object.
+function readSettingsFields(container) {
+  const out = {};
+  container.querySelectorAll("[data-sid]").forEach(el => {
+    const raw = el.value;
+    out[el.dataset.sid] = el.type === "number" ? parseFloat(raw) : raw;
+  });
+  return out;
+}
+
+function collectSettings() {
+  return JSON.stringify(readSettingsFields(document.getElementById("settingsForm")));
+}
+
+// ── Video upload ───────────────────────────────────────────────────────────────
+function fmt(s) {
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
+// Precise timestamp — keeps sub-second detail for short clips (1–2 s videos)
+// where m:ss would collapse everything to 0:00 / 0:01.
+function fmtT(s) {
+  s = Math.max(0, +s || 0);
+  if (s < 10)  return s.toFixed(2) + "s";   // 0.83s
+  if (s < 60)  return s.toFixed(1) + "s";   // 23.4s
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${m}:${sec.toFixed(0).padStart(2, "0")}`;
+}
+
+function handleVideoFile(file) {
+  if (!file || !file.type.startsWith("video/")) return;
+  videoFile = file;
+  const vid = document.getElementById("vidEl");
+  vid.src = URL.createObjectURL(file);
+  document.getElementById("vidName").textContent = file.name;
+  document.getElementById("vidDrop").style.display = "none";
+  document.getElementById("vidPlayer").classList.add("show");
+  setupPlayer(vid);
+  updateRunBtn();
+}
+
+function setupPlayer(vid) {
+  const btnPlay = document.getElementById("btnPlay");
+  const scrub   = document.getElementById("vidScrub");
+  const timeEl  = document.getElementById("vidTime");
+  const speedEl = document.getElementById("vidSpeed");
+
+  vid.onloadedmetadata = () => { scrub.max = vid.duration; timeEl.textContent = `0:00 / ${fmt(vid.duration)}`; };
+  vid.ontimeupdate = () => { scrub.value = vid.currentTime; timeEl.textContent = `${fmt(vid.currentTime)} / ${fmt(vid.duration)}`; };
+  vid.onended = () => { btnPlay.textContent = "▶"; };
+  btnPlay.onclick  = () => { if (vid.paused) { vid.play(); btnPlay.textContent = "⏸"; } else { vid.pause(); btnPlay.textContent = "▶"; } };
+  scrub.oninput    = () => { vid.currentTime = scrub.value; };
+  speedEl.onchange = () => { vid.playbackRate = parseFloat(speedEl.value); };
+}
+
+const vidDrop = document.getElementById("vidDrop");
+document.getElementById("videoFile").addEventListener("change", e => handleVideoFile(e.target.files[0]));
+vidDrop.addEventListener("dragover",  e => { e.preventDefault(); vidDrop.style.background = "#222"; });
+vidDrop.addEventListener("dragleave", () => { vidDrop.style.background = ""; });
+vidDrop.addEventListener("drop",      e => { e.preventDefault(); vidDrop.style.background = ""; handleVideoFile(e.dataTransfer.files[0]); });
+// Swap to a different video without reloading the page — the file input stays
+// triggerable even while its drop zone is hidden behind the player.
+document.getElementById("btnChangeVid").addEventListener("click", () => document.getElementById("videoFile").click());
+document.getElementById("promptInput").addEventListener("input", updateRunBtn);
+
+// ── Run ───────────────────────────────────────────────────────────────────────
+function updateRunBtn() {
+  const needsPrompt = !!selectedPipeline?.requires_prompt;
+  const promptOk    = !needsPrompt || document.getElementById("promptInput").value.trim().length > 0;
+  const hasVideo    = !!videoFile || !!dsDetailVideo;
+  document.getElementById("runBtn").disabled = !(selectedPipeline && hasVideo && promptOk);
+}
+document.getElementById("runBtn").addEventListener("click", runPipeline);
+
+async function runPipeline() {
+  const isDetail = !!dsDetailVideo;
+  if (!selectedPipeline) return;
+  if (!isDetail && !videoFile) return;
+  switchTab("report");
+
+  const entry = {
+    id:           Date.now(),
+    stageId:      selectedStage.id,
+    stageCls:     selectedStage.cls,
+    stageNum:     selectedStage.num,
+    stageName:    selectedStage.name,
+    stageSubtitle: selectedStage.subtitle,
+    pipelineId:   selectedPipeline.id,
+    pipelineName: selectedPipeline.name,
+    timestamp:    new Date().toTimeString().slice(0, 8),
+    status:       'running',
+    logs: [], metrics: [], severities: [], images: [], videos: [], plots: [], markerVideos: [], results: [], llmSummaries: [],
+    excluded: false,
+    comment:  "",
+  };
+
+  // Clear output
+  setStatus("running", "Running");
+  document.getElementById("outputTitle").textContent = selectedPipeline.name;
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("logPane").style.display = "block";
+  document.getElementById("logPane").innerHTML = "";
+  document.getElementById("resultsPane").classList.remove("show");
+  document.getElementById("metricsGrid").innerHTML = "";
+  document.getElementById("imageBlocks").innerHTML = "";
+  document.getElementById("severityBlock").style.display = "none";
+  document.getElementById("testReportFooter").classList.remove("show");
+  document.getElementById("commentInput").value = "";
+  document.getElementById("trfSaved").classList.remove("show");
+
+  const btn = document.getElementById("runBtn");
+  btn.classList.add("loading"); btn.disabled = true;
+
+  const form = new FormData();
+  form.append("pipeline_id", selectedPipeline.id);
+
+  // Build settings; the Event Localizer also receives accumulated Stage 1 signals.
+  let settingsObj = (selectedPipeline.settings && selectedPipeline.settings.length)
+    ? JSON.parse(collectSettings()) : {};
+
+  if (isDetail) {
+    // Dataset detail mode: run against server-side file by id
+    form.append("file_id", dsDetailVideo.id);
+    if (selectedPipeline.id === "s2_event_localizer") {
+      // Collect stage1 signals from the video's existing runs
+      const vSignals = {};
+      (dsDetailVideo.runs || []).forEach(e => {
+        if (e.pipelineId && e.pipelineId.startsWith("s1_") && e._signals) {
+          Object.assign(vSignals, e._signals);
+        }
+      });
+      settingsObj.stage1_signals = Object.values(vSignals);
+    }
+    // Final diagnosis: forward this video's prior runs (detail mode sources them
+    // from dsDetailVideo.runs, not the single-video reportData store).
+    if (selectedPipeline.id === "s4_report") {
+      settingsObj.previous_results = (dsDetailVideo.runs || [])
+        .filter(r => !r.excluded && r.pipelineId !== "s4_report")
+        .map(r => ({
+          id: r.id,
+          stageId: r.stageId,
+          stageName: r.stageName,
+          stageNum: r.stageNum,
+          pipelineId: r.pipelineId,
+          pipelineName: r.pipelineName,
+          timestamp: r.timestamp,
+          status: r.status,
+          metrics: r.metrics || [],
+          severities: r.severities || [],
+          logs: r.logs || [],
+          comment: r.comment || "",
+          excluded: r.excluded || false,
+        }));
+      settingsObj.video_name = dsDetailVideo.name || "dataset video";
+      appendLog(
+        settingsObj.previous_results.length ? "info" : "warn",
+        settingsObj.previous_results.length
+          ? `Forwarding ${settingsObj.previous_results.length} previous test result(s) into the final diagnosis.`
+          : "No previous test results found yet — run some earlier tests first.",
+        entry
+      );
+    }
+    entry.settings = redactSettings(settingsObj);   // store WITHOUT any entered key
+    if (Object.keys(settingsObj).length) form.append("settings", JSON.stringify(settingsObj));
+    try {
+      const res = await fetch(`${API}/dataset/run`, { method: "POST", body: form });
+      const reader = res.body.getReader(), dec = new TextDecoder(); let buf = "";
+      while (true) {
+        const { done, value } = await reader.read(); if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split("\n"); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try { handleEvent(JSON.parse(line), entry); } catch(e) { console.error(e, line.slice(0,200)); }
+        }
+      }
+    } catch (err) {
+      appendLog("error", "Connection error: " + err.message, entry);
+      setStatus("error", "Error"); entry.status = "error";
+    } finally {
+      btn.classList.remove("loading"); updateRunBtn();
+      document.querySelector(".tab-btn[data-tab='report']").classList.add("has-content");
+      if (entry.status === "running") entry.status = "done";
+      dsDetailVideo.runs.push(entry);
+      const sev = entry.severities[0]?.value;
+      if (sev != null) dsDetailVideo.maxSev = Math.max(dsDetailVideo.maxSev ?? 0, sev);
+      dsDetailVideo.status = dsDetailVideo.runs.some(e => e.status === "error") ? "error" : "done";
+      lastEntry = entry;
+      showTestReportFooter(entry);
+      renderPipelineHistory(entry.pipelineId);
+      renderDsGrid();
+      const stageTab = document.querySelector(`.stage-tab[data-stage-id="${selectedStage.id}"]`);
+      if (stageTab) stageTab.classList.add("has-results");
+      const activeCard = document.querySelector(`.t-card[data-id="${entry.pipelineId}"]`);
+      if (activeCard) markTestCardResult(activeCard, entry);
+    }
+  } else {
+    // Single-video mode: upload the file
+    form.append("video", videoFile);
+    if (selectedPipeline.requires_pair)   form.append("video_ai", videoFile);
+    if (selectedPipeline.requires_prompt) form.append("prompt", document.getElementById("promptInput").value.trim());
+    if (selectedPipeline.id === "s2_event_localizer") {
+      settingsObj.stage1_signals = Object.values(stage1SignalStore);
+      const totalSig = settingsObj.stage1_signals.reduce((a, g) => a + (g.signals?.length || 0), 0);
+      appendLog(totalSig ? "info" : "warn",
+        totalSig ? `Forwarding ${totalSig} Stage 1 signal(s) from ${settingsObj.stage1_signals.length} screening test(s).`
+                 : "No Stage 1 signals stored yet — run a Stage 1 screening test first.", entry);
+    }
+    if (selectedPipeline.id === "s4_report") {
+      settingsObj.previous_results = reportData
+        .filter(r => !r.excluded && r.pipelineId !== "s4_report")
+        .map(r => ({
+          id: r.id,
+          stageId: r.stageId,
+          stageName: r.stageName,
+          stageNum: r.stageNum,
+          pipelineId: r.pipelineId,
+          pipelineName: r.pipelineName,
+          timestamp: r.timestamp,
+          status: r.status,
+          metrics: r.metrics || [],
+          severities: r.severities || [],
+          logs: r.logs || [],
+          comment: r.comment || "",
+          excluded: r.excluded || false,
+        }));
+
+      settingsObj.video_name = videoFile ? videoFile.name : "uploaded video";
+
+      appendLog(
+        settingsObj.previous_results.length ? "info" : "warn",
+        settingsObj.previous_results.length
+          ? `Forwarding ${settingsObj.previous_results.length} previous test result(s) into the final diagnosis.`
+          : "No previous test results found yet — run some earlier tests first.",
+        entry
+      );
+    }
+    entry.settings = redactSettings(settingsObj);   // store WITHOUT any entered key
+    if (Object.keys(settingsObj).length) form.append("settings", JSON.stringify(settingsObj));
+    try {
+      const res = await fetch(`${API}/run`, { method: "POST", body: form });
+      const reader = res.body.getReader(), dec = new TextDecoder();
+      let buf = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split("\n"); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try { handleEvent(JSON.parse(line), entry); } catch(e) { console.error(e, line.slice(0,200)); }
+        }
+      }
+    } catch (err) {
+      appendLog("error", "Connection error: " + err.message, entry);
+      setStatus("error", "Error"); entry.status = "error";
+    } finally {
+      btn.classList.remove("loading"); updateRunBtn();
+      document.querySelector(".tab-btn[data-tab='report']").classList.add("has-content");
+      if (entry.status === "running") entry.status = "done";
+      reportData.push(entry);
+      lastEntry = entry;
+      showTestReportFooter(entry);
+      renderPipelineHistory(entry.pipelineId);
+      renderReport();
+      const stageTab = document.querySelector(`.stage-tab[data-stage-id="${selectedStage.id}"]`);
+      if (stageTab) stageTab.classList.add("has-results");
+    }
+  }
+}
+
+// ── Event handling ────────────────────────────────────────────────────────────
+function handleEvent(ev, entry) {
+  if (ev.type === "log") {
+    appendLog(ev.level, ev.text, entry);
+  } else if (ev.type === "metric") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendMetric(ev.label, ev.value, ev.sub);
+    entry.metrics.push({label:ev.label, value:ev.value, sub:ev.sub});
+  } else if (ev.type === "severity") {
+    document.getElementById("resultsPane").classList.add("show");
+    showSeverity(ev.label, ev.value, ev.color);
+    entry.severities.push({label:ev.label, value:ev.value, color:ev.color});
+  } else if (ev.type === "image") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendImage(ev.data, ev.mime, ev.caption);
+    entry.images.push({data:ev.data, mime:ev.mime, caption:ev.caption});
+  } else if (ev.type === "plotly") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendPlotly(ev.data, ev.caption, "imageBlocks");
+    entry.plots.push({data:ev.data, caption:ev.caption});
+  } else if (ev.type === "result") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendJsonResult(ev.title || "Unified Diagnostic JSON", ev.report || ev);
+    if (!entry.results) entry.results = [];
+    entry.results.push(ev);
+  } else if (ev.type === "llm_summary") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendLLMSummary(ev.title || "LLM Diagnostic Summary", ev.markdown || "");
+    if (!entry.llmSummaries) entry.llmSummaries = [];
+    entry.llmSummaries.push(ev);
+  } else if (ev.type === "video") {
+    document.getElementById("resultsPane").classList.add("show");
+    appendVideo(ev.data, ev.mime, ev.caption);
+    entry.videos.push({data:ev.data, mime:ev.mime, caption:ev.caption});
+  } else if (ev.type === "signal") {
+    // Stash Stage 1 anomaly signals for the Event Localizer to consume later.
+    // Keep severity/type_severities — the localizer's significance gate reads them.
+    const sig = {
+      source: ev.source, source_name: ev.source_name || ev.source,
+      fps: ev.fps, n_frames: ev.n_frames, signals: ev.signals || [],
+      severity: ev.severity, type_severities: ev.type_severities,
+    };
+    stage1SignalStore[ev.source] = sig;
+    // Also attach to this run's entry so dataset-detail re-runs (which read
+    // entry._signals from a video's past runs) forward them too.
+    if (entry) (entry._signals ??= {})[ev.source] = sig;
+  } else if (ev.type === "marker_video") {
+    document.getElementById("resultsPane").classList.add("show");
+    renderMarkerVideo(document.getElementById("imageBlocks"), ev);
+    entry.markerVideos.push(ev);
+  } else if (ev.type === "timing") {
+    entry.durationMs = ev.duration_ms;
+    entry.gpuMb = ev.gpu_mb ?? null;
+  } else if (ev.type === "done") {
+    setStatus("done", "Done"); entry.status = "done";
+  } else if (ev.type === "error") {
+    appendLog("error", ev.text, entry); setStatus("error", "Error"); entry.status = "error";
+  }
+}
+
+function appendLog(level, text, entry) {
+  const pane = document.getElementById("logPane");
+  const line = document.createElement("div"); line.className = `log-line log-${level}`;
+  const ts  = new Date().toTimeString().slice(0, 8);
+  const pfx = level==="success"?"✓":level==="warn"?"⚠":level==="error"?"✗":"·";
+  line.innerHTML = `<span class="log-ts">${ts}</span><span class="log-msg">${pfx} ${text}</span>`;
+  pane.appendChild(line); line.scrollIntoView({behavior:"smooth", block:"end"});
+  if (entry) entry.logs.push({level, text, ts});
+}
+
+function appendMetric(label, value, sub) {
+  const card = document.createElement("div"); card.className = "metric-card";
+  const cls = value==="FAIL"?"fail":value==="PASS"?"pass":"";
+  card.innerHTML = `<div class="metric-label">${label}</div><div class="metric-value ${cls}">${value}</div><div class="metric-sub">${sub}</div>`;
+  document.getElementById("metricsGrid").appendChild(card);
+}
+
+function showSeverity(label, value, color) {
+  document.getElementById("severityBlock").style.display = "block";
+  document.getElementById("sevTitle").textContent = label;
+  document.getElementById("sevVal").textContent   = value + "%";
+  document.getElementById("sevFill").style.background = color;
+  setTimeout(() => { document.getElementById("sevFill").style.width = value + "%"; }, 50);
+}
+
+function appendImage(b64, mime, caption) {
+  const wrap = document.createElement("div"); wrap.className = "image-block";
+  const img = document.createElement("img"); img.src=`data:${mime};base64,${b64}`; img.alt=caption||"";
+  wrap.appendChild(img);
+  if (caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=caption; wrap.appendChild(c); }
+  document.getElementById("imageBlocks").appendChild(wrap);
+}
+
+function appendPlotly(jsonStr, caption, containerId) {
+  const wrap = document.createElement("div"); wrap.className = "image-block";
+  const plotDiv = document.createElement("div");
+  plotDiv.style.cssText = "width:100%;min-height:300px;";
+  wrap.appendChild(plotDiv);
+  if (caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=caption; wrap.appendChild(c); }
+  document.getElementById(containerId).appendChild(wrap);
+  const spec = JSON.parse(jsonStr);
+  Plotly.newPlot(plotDiv, spec.data, Object.assign({}, spec.layout, {autosize:true}), {responsive:true, displayModeBar:true, displaylogo:false, modeBarButtonsToRemove:['toImage','sendDataToCloud']});
+}
+
+function renderJsonResultInto(container, title, obj) {
+  const wrap = document.createElement("div");
+  wrap.className = "image-block";
+
+  const label = document.createElement("div");
+  label.className = "image-caption";
+  label.textContent = title;
+
+  const pre = document.createElement("pre");
+  pre.style.cssText = `
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 420px;
+    overflow: auto;
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.45;
+  `;
+
+  pre.textContent = JSON.stringify(obj, null, 2);
+
+  wrap.appendChild(label);
+  wrap.appendChild(pre);
+
+  container.appendChild(wrap);
+}
+
+function renderLLMSummaryInto(container, title, markdown) {
+  const wrap = document.createElement("div");
+  wrap.className = "image-block";
+
+  const label = document.createElement("div");
+  label.className = "image-caption";
+  label.textContent = title;
+
+  const pre = document.createElement("pre");
+  pre.style.cssText = `
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 520px;
+    overflow: auto;
+    background: #f8fafc;
+    color: #0f172a;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    border: 1px solid #e5e7eb;
+  `;
+
+  pre.textContent = markdown;
+
+  wrap.appendChild(label);
+  wrap.appendChild(pre);
+
+  container.appendChild(wrap);
+}
+
+function appendJsonResult(title, obj) {
+  renderJsonResultInto(document.getElementById("imageBlocks"), title, obj);
+}
+
+function appendLLMSummary(title, markdown) {
+  renderLLMSummaryInto(document.getElementById("imageBlocks"), title, markdown);
+}
+
+function appendVideo(b64, mime, caption) {
+  const wrap = document.createElement("div"); wrap.className = "video-block";
+  let media;
+  if (mime.startsWith("video/")) { media=document.createElement("video"); media.src=`data:${mime};base64,${b64}`; media.controls=true; media.loop=true; }
+  else { media=document.createElement("img"); media.src=`data:${mime};base64,${b64}`; media.alt=caption||""; }
+  media.style.width="100%"; wrap.appendChild(media);
+  if (caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=caption; wrap.appendChild(c); }
+  document.getElementById("imageBlocks").appendChild(wrap);
+}
+
+// ── Marker video viewer (Event Localizer output) ───────────────────────────────
+function renderMarkerVideo(container, mv) {
+  const markers = (mv.markers || []).slice().sort((a, b) => a.t_start - b.t_start || a.lane - b.lane);
+  // Lanes: prefer backend ordering, else derive from markers (by type).
+  let lanes = (mv.lanes || []).slice();
+  if (!lanes.length) {
+    const seen = {};
+    markers.forEach(m => { if (!(m.type in seen)) seen[m.type] = { type: m.type, label: m.type_label || m.type, color: m.color }; });
+    lanes = Object.values(seen);
+  }
+  const laneIndex = {}; lanes.forEach((l, i) => laneIndex[l.type] = i);
+  const hidden = new Set();   // diagnostics toggled off for individual evaluation
+  const T = mv.duration || 0;
+  // Frame strip — a JPEG-per-frame player (no <video> element). This needs no
+  // ffmpeg, never hangs on malformed / AI-generated clips, and seeks instantly
+  // and frame-exactly. The backend sends `frames` + their `frame_times`.
+  const strip = mv.frames || [];
+  const stripTimes = mv.frame_times || [];
+  const hasFrames = strip.length > 0;
+  // Legacy fallback: an animated clip sent as a data URL (no frame seeking).
+  const legacySrc = (!hasFrames && mv.data) ? `data:${mv.mime};base64,${mv.data}` : null;
+  const playable = hasFrames;
+  const wrap = document.createElement("div"); wrap.className = "mv-block";
+
+  // Stage: frame image + ROI overlay
+  const stage = document.createElement("div"); stage.className = "mv-stage";
+  const media = document.createElement("img"); media.className = "mv-video"; media.alt = mv.caption || "";
+  media.src = hasFrames ? `data:image/jpeg;base64,${strip[0]}` : (legacySrc || "");
+  stage.appendChild(media);
+  const roi = document.createElement("div"); roi.className = "mv-roi";
+  const roiTag = document.createElement("div"); roiTag.className = "mv-roi-tag";
+  roi.appendChild(roiTag); stage.appendChild(roi);
+  wrap.appendChild(stage);
+
+  // Lane timeline (one row per diagnostic) + a single full-height playhead
+  const lanesEl = document.createElement("div"); lanesEl.className = "mv-lanes";
+  const laneTracks = {};
+  lanes.forEach(l => {
+    const row = document.createElement("div"); row.className = "mv-lane"; row.dataset.type = l.type;
+    const label = document.createElement("div"); label.className = "mv-lane-label";
+    label.innerHTML = `<span class="mv-chk">☑</span><span class="dot" style="background:${l.color}"></span>${l.label}`;
+    label.title = (l.source ? `${l.label} — from “${l.source}” test. ` : `${l.label}. `) + "Click to show/hide this diagnostic.";
+    label.addEventListener("click", () => toggleLane(l.type));
+    const trk = document.createElement("div"); trk.className = "mv-lane-track"; trk.dataset.type = l.type;
+    laneTracks[l.type] = trk;
+    row.append(label, trk); lanesEl.appendChild(row);
+  });
+  const playhead = document.createElement("div"); playhead.className = "mv-ph";
+  lanesEl.appendChild(playhead);
+  wrap.appendChild(lanesEl);
+
+  const axis = document.createElement("div"); axis.className = "mv-axis";
+  axis.innerHTML = `<span>0.00s</span><span>${fmtT(mv.duration || 0)}</span>`;
+  wrap.appendChild(axis);
+
+  // Controls
+  const controls = document.createElement("div"); controls.className = "mv-controls";
+  const btnPrev = mkBtn("◀◀", "Previous marker");
+  const btnPlay = mkBtn("▶", "Play / pause");
+  const btnNext = mkBtn("▶▶", "Next marker");
+  const timeEl = document.createElement("span"); timeEl.className = "mv-time"; timeEl.textContent = `0.00s / ${fmtT(mv.duration || 0)}`;
+  const counter = document.createElement("span"); counter.className = "mv-counter";
+  counter.textContent = `${markers.length} marker${markers.length !== 1 ? "s" : ""} · ${lanes.length} lane${lanes.length !== 1 ? "s" : ""}`;
+  controls.append(btnPrev, btnPlay, btnNext, timeEl, counter);
+  if (!playable) { btnPrev.disabled = btnPlay.disabled = btnNext.disabled = true; }
+  wrap.appendChild(controls);
+
+  if (mv.caption) { const c = document.createElement("div"); c.className = "image-caption"; c.textContent = mv.caption; wrap.appendChild(c); }
+
+  // Marker list grouped by diagnostic
+  const list = document.createElement("div");
+  if (markers.length) {
+    list.className = "mv-list";
+    lanes.forEach(l => {
+      const laneMarkers = markers.map((m, i) => [m, i]).filter(([m]) => m.type === l.type);
+      if (!laneMarkers.length) return;
+      const grp = document.createElement("div"); grp.className = "mv-grp"; grp.dataset.type = l.type;
+      const hdr = document.createElement("div"); hdr.className = "mv-grp-hdr";
+      const srcTxt = l.source ? ` · from “${l.source}”` : "";
+      const sevTxt = (l.severity != null) ? ` · test ${l.severity}%` : "";
+      hdr.innerHTML = `<span class="dot" style="background:${l.color}"></span>${l.label}` +
+                      `<span class="mv-grp-count">${srcTxt}${sevTxt} · ${laneMarkers.length} marker${laneMarkers.length !== 1 ? "s" : ""}</span>`;
+      hdr.style.cursor = "pointer"; hdr.title = "Click to show/hide this diagnostic.";
+      hdr.addEventListener("click", () => toggleLane(l.type));
+      grp.appendChild(hdr);
+      laneMarkers.forEach(([m, i]) => {
+        const row = document.createElement("div"); row.className = "mv-row"; row.dataset.idx = i;
+        row.innerHTML =
+          `<span class="mv-row-idx">#${m.id + 1}</span>` +
+          `<span class="mv-row-dot" style="background:${m.color}"></span>` +
+          `<span class="mv-row-label">${fmtT(m.t_start)}–${fmtT(m.t_end)}</span>` +
+          `<span class="mv-row-meta">${m.n_signals} sig</span>` +
+          `<span class="mv-row-sev" style="color:${m.color}">${m.severity}</span>`;
+        row.addEventListener("click", () => seekToMarker(i));
+        grp.appendChild(row);
+      });
+      list.appendChild(grp);
+    });
+  } else {
+    list.className = "mv-none";
+    list.textContent = "No defect markers on this timeline — run a Stage 1 screening test, then re-run the Event Localizer.";
+  }
+  wrap.appendChild(list);
+  container.appendChild(wrap);
+
+  // ── Frame player engine ────────────────────────────────────────────────────
+  // curT is the playhead time in seconds, in the SAME timebase as the markers.
+  // No <video> element means no duration/seeking quirks — positioning is curT/T.
+  let curT = 0, curFrame = -1, playing = false, rafId = null, lastTs = 0;
+
+  function nearestFrameIdx(t, times) {
+    if (!times || !times.length) return 0;
+    let lo = 0, hi = times.length - 1;
+    if (t <= times[0]) return 0;
+    if (t >= times[hi]) return hi;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (times[mid] < t) lo = mid + 1; else hi = mid; }
+    return (lo > 0 && (t - times[lo - 1]) <= (times[lo] - t)) ? lo - 1 : lo;
+  }
+  // Returns the highest-severity marker whose event clip time range covers t, or null.
+  function getEventClip(t) {
+    let best = null, bestSev = -1;
+    for (const m of markers) {
+      if (hidden.has(m.type)) continue;
+      const et = m.event_times;
+      if (!et || !et.length || !m.event_frames || !m.event_frames.length) continue;
+      if (t >= et[0] && t <= et[et.length - 1] && m.severity > bestSev) {
+        best = m; bestSev = m.severity;
+      }
+    }
+    return best;
+  }
+  function render() {
+    if (hasFrames) {
+      // Near an event: use that marker's dense clip for smooth playback.
+      // Elsewhere: use the sparse overview strip for scrubbing.
+      const clip   = getEventClip(curT);
+      const frms   = clip ? clip.event_frames : strip;
+      const times  = clip ? clip.event_times  : stripTimes;
+      const idx    = nearestFrameIdx(curT, times);
+      const newSrc = `data:image/jpeg;base64,${frms[idx]}`;
+      if (newSrc !== media.src) { media.src = newSrc; curFrame = idx; }
+    }
+    positionPlayhead();
+    timeEl.textContent = `${fmtT(curT)} / ${fmtT(T)}`;
+    const idx = activeMarkerAt(curT); highlight(idx); updateRoi(idx);
+  }
+  function seek(t) { curT = Math.max(0, Math.min(+t || 0, T)); render(); }
+  function play() {
+    if (playing || !playable) return;
+    if (curT >= T - 1e-3) curT = 0;
+    playing = true; lastTs = 0; btnPlay.textContent = "⏸";
+    rafId = requestAnimationFrame(tick);
+  }
+  function pause() {
+    playing = false; btnPlay.textContent = "▶";
+    if (rafId) cancelAnimationFrame(rafId); rafId = null;
+  }
+  function tick(ts) {
+    if (!playing) return;
+    if (lastTs) curT += (ts - lastTs) / 1000;
+    lastTs = ts;
+    if (curT >= T) { curT = T; render(); pause(); return; }
+    render();
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function layoutSegments() {
+    Object.values(laneTracks).forEach(t => t.querySelectorAll(".mv-seg").forEach(s => s.remove()));
+    if (!T) return;
+    markers.forEach((m, i) => {
+      if (hidden.has(m.type)) return;
+      const trk = laneTracks[m.type]; if (!trk) return;
+      const seg = document.createElement("div"); seg.className = "mv-seg"; seg.dataset.idx = i;
+      seg.style.left  = (m.t_start / T * 100) + "%";
+      seg.style.width = Math.max(0.7, (m.t_end - m.t_start) / T * 100) + "%";
+      seg.style.background = m.color;
+      seg.title = `#${m.id + 1} ${m.type_label} ${fmtT(m.t_start)}–${fmtT(m.t_end)} (sev ${m.severity})`;
+      seg.addEventListener("click", e => { e.stopPropagation(); seekToMarker(i); });
+      trk.appendChild(seg);
+    });
+    positionPlayhead();
+  }
+  function positionPlayhead() {
+    const firstTrk = laneTracks[lanes[0]?.type];
+    if (!firstTrk) return;
+    const cont = lanesEl.getBoundingClientRect();
+    const tr   = firstTrk.getBoundingClientRect();
+    const rows = lanesEl.querySelectorAll(".mv-lane-track");
+    const last = rows[rows.length - 1].getBoundingClientRect();
+    const frac = T ? Math.max(0, Math.min(1, curT / T)) : 0;
+    playhead.style.left   = (tr.left - cont.left + frac * tr.width) + "px";
+    playhead.style.top    = (tr.top - cont.top) + "px";
+    playhead.style.height = (last.bottom - tr.top) + "px";
+  }
+  // Highest-severity marker window containing the current time (drives the ROI).
+  function activeMarkerAt(t) {
+    let best = -1, bestSev = -1;
+    for (let i = 0; i < markers.length; i++) {
+      const m = markers[i];
+      if (hidden.has(m.type)) continue;
+      if (t >= m.t_start && t <= m.t_end && m.severity > bestSev) { best = i; bestSev = m.severity; }
+    }
+    return best;
+  }
+  function updateRoi(idx) {
+    const m = idx >= 0 ? markers[idx] : null;
+    if (!m || !m.region || !hasFrames) { roi.classList.remove("show"); return; }
+    // Region coords are in source pixels → map from the source dimensions
+    // (frame strip is a downscaled copy).
+    const vw = mv.src_width || media.naturalWidth, vh = mv.src_height || media.naturalHeight;
+    const cw = media.clientWidth, ch = media.clientHeight;
+    if (!vw || !vh || !cw || !ch) { roi.classList.remove("show"); return; }
+    const scale = Math.min(cw / vw, ch / vh);
+    const ox = (cw - vw * scale) / 2, oy = (ch - vh * scale) / 2;
+    roi.style.left   = (ox + m.region.x * scale) + "px";
+    roi.style.top    = (oy + m.region.y * scale) + "px";
+    roi.style.width  = (m.region.w * scale) + "px";
+    roi.style.height = (m.region.h * scale) + "px";
+    roi.style.borderColor = m.color;
+    roiTag.style.background = m.color;
+    roiTag.textContent = `#${m.id + 1} ${m.type_label}`;
+    roi.classList.add("show");
+  }
+  function highlight(idx) {
+    list.querySelectorAll(".mv-row").forEach(r => r.classList.toggle("active", +r.dataset.idx === idx));
+    Object.values(laneTracks).forEach(t => t.querySelectorAll(".mv-seg").forEach(s => s.classList.toggle("active", +s.dataset.idx === idx)));
+  }
+  function seekToMarker(i) { if (markers[i]) seek(markers[i].t_center); }
+  function visibleMarkers() { return markers.map((m, i) => [m, i]).filter(([m]) => !hidden.has(m.type)); }
+
+  btnPlay.onclick = () => { playing ? pause() : play(); };
+  btnPrev.onclick = () => {
+    const vis = visibleMarkers(); let target = null;
+    for (let k = vis.length - 1; k >= 0; k--) if (vis[k][0].t_center < curT - 0.05) { target = vis[k][1]; break; }
+    if (target !== null) seekToMarker(target); else if (vis.length) seekToMarker(vis[0][1]);
+  };
+  btnNext.onclick = () => {
+    const vis = visibleMarkers(); let target = null;
+    for (let k = 0; k < vis.length; k++) if (vis[k][0].t_center > curT + 0.05) { target = vis[k][1]; break; }
+    if (target !== null) seekToMarker(target); else if (vis.length) seekToMarker(vis[vis.length - 1][1]);
+  };
+  Object.values(laneTracks).forEach(trk => trk.addEventListener("click", e => {
+    if (!T) return;
+    const r = trk.getBoundingClientRect();
+    seek(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * T);
+  }));
+
+  // ── Per-diagnostic show/hide (evaluate diagnostics individually) ───────────
+  function updateCounter() {
+    const vis = markers.filter(m => !hidden.has(m.type)).length;
+    const lanesVis = lanes.filter(l => !hidden.has(l.type)).length;
+    counter.textContent = `${vis} marker${vis !== 1 ? "s" : ""} · ${lanesVis}/${lanes.length} lane${lanes.length !== 1 ? "s" : ""}`;
+  }
+  function toggleLane(type) {
+    if (hidden.has(type)) hidden.delete(type); else hidden.add(type);
+    lanesEl.querySelectorAll(".mv-lane").forEach(r => {
+      const off = hidden.has(r.dataset.type);
+      r.classList.toggle("off", off);
+      const chk = r.querySelector(".mv-chk"); if (chk) chk.textContent = off ? "☐" : "☑";
+    });
+    list.querySelectorAll(".mv-grp").forEach(g => g.classList.toggle("off", hidden.has(g.dataset.type)));
+    layoutSegments();
+    updateCounter();
+    const idx = activeMarkerAt(curT); highlight(idx); updateRoi(idx);
+  }
+
+  window.addEventListener("resize", () => { positionPlayhead(); updateRoi(activeMarkerAt(curT)); });
+  // The ROI needs the frame's rendered size; refresh once it has decoded.
+  media.addEventListener("load", () => { positionPlayhead(); updateRoi(activeMarkerAt(curT)); });
+  if (T) layoutSegments();
+  render();
+}
+
+function mkBtn(label, title) {
+  const b = document.createElement("button"); b.className = "mv-btn"; b.textContent = label; b.title = title; return b;
+}
+
+function setStatus(state, label) {
+  const pill = document.getElementById("statusPill");
+  pill.className = "status-pill pill-" + state; pill.textContent = label;
+}
+
+// ── Test Report Footer ────────────────────────────────────────────────────────
+function showTestReportFooter(entry) {
+  const footer = document.getElementById("testReportFooter");
+  footer.classList.add("show");
+  document.getElementById("resultsPane").classList.add("show");
+
+  // Exclude button
+  const exBtn = document.getElementById("excludeBtn");
+  exBtn.textContent = entry.excluded ? "Include in main report" : "Exclude from main report";
+  exBtn.classList.toggle("active", entry.excluded);
+  exBtn.onclick = () => {
+    entry.excluded = !entry.excluded;
+    exBtn.textContent = entry.excluded ? "Include in main report" : "Exclude from main report";
+    exBtn.classList.toggle("active", entry.excluded);
+    renderReport();
+  };
+
+  // Comment save
+  document.getElementById("commentInput").value = entry.comment;
+  document.getElementById("saveCommentBtn").onclick = () => {
+    entry.comment = document.getElementById("commentInput").value.trim();
+    const saved = document.getElementById("trfSaved");
+    saved.classList.add("show");
+    setTimeout(() => saved.classList.remove("show"), 2000);
+    renderReport();
+  };
+}
+
+// ── Report ────────────────────────────────────────────────────────────────────
+
+function renderReport() {
+  const included = reportData.filter(e => !e.excluded);
+  const total    = reportData.length;
+  const empty    = document.getElementById("reportEmpty");
+  const content  = document.getElementById("reportContent");
+  const countEl  = document.getElementById("reportCount");
+
+  countEl.textContent = total;
+  if (!total) { empty.style.display="flex"; content.style.display="none"; return; }
+  empty.style.display="none"; content.style.display="flex";
+  document.getElementById("reportBtn").classList.add("has-content");
+
+  // Summary stats
+  const issues = included.filter(e => e.severities.some(s => s.value > 40)).length;
+  const stagesCovered = [...new Set(included.map(e => e.stageId))].length;
+
+  // Header
+  const hdr = document.getElementById("reportHeader");
+  hdr.innerHTML = "";
+  const hdrBar = document.createElement("div"); hdrBar.className = "rpt-header";
+  hdrBar.innerHTML = `
+    <div class="rpt-header-left">
+      <div class="rpt-main-title">Diagnostic Report</div>
+      <div class="rpt-subtitle">${included.length} test${included.length!==1?'s':''} across ${stagesCovered} stage${stagesCovered!==1?'s':''}${issues ? ` · <span style="color:var(--red);font-weight:500">${issues} issue${issues!==1?'s':''} flagged</span>` : ' · no significant anomalies'}</div>
+    </div>
+    <div class="rpt-header-right">
+      <button class="rpt-detail-btn${showDetails?' active':''}" id="rptDetailBtn">${showDetails?'Hide details':'Show details'}</button>
+    </div>`;
+  hdr.appendChild(hdrBar);
+  document.getElementById("rptDetailBtn").addEventListener("click", () => {
+    showDetails = !showDetails;
+    renderReport();
+  });
+
+  // Stage groups
+  const stagesEl = document.getElementById("reportStages");
+  stagesEl.innerHTML = "";
+
+  STAGES.forEach(stage => {
+    const stageEntries = reportData.filter(e => e.stageId === stage.id);
+    if (!stageEntries.length) return;
+
+    const group = document.createElement("div"); group.className = "rsg";
+    const includedEntries = stageEntries.filter(e => !e.excluded);
+    const includedCount = includedEntries.length;
+    const stageDur = sumDur(includedEntries);
+
+    group.innerHTML = `<div class="rsg-header">
+      <div class="rsg-num" style="background:${stage.color}">${stage.num}</div>
+      <div>
+        <div class="rsg-name">${stage.name}</div>
+        <div class="rsg-sub">${stage.subtitle}</div>
+      </div>
+      ${stageDur != null ? `<span class="rsg-count" title="Total server run time for this stage">⏱ ${fmtDur(stageDur)}</span>` : ""}
+      <span class="rsg-count">${includedCount} result${includedCount!==1?'s':''}</span>
+    </div>`;
+
+    stageEntries.forEach(entry => {
+      const rte = document.createElement("div");
+      rte.className = `rte${entry.excluded?' rte-excluded':''}`;
+
+      // Determine severity for summary
+      const mainSev  = entry.severities[0];
+      const sevColor = mainSev ? mainSev.color : "#aaa";
+      const sevVal   = mainSev ? mainSev.value : null;
+
+      const statusClass = entry.status === "done" ? "pill-done" : entry.status === "error" ? "pill-error" : "pill-running";
+      const statusText  = entry.status === "done" ? "Done" : entry.status === "error" ? "Error" : "Running";
+
+      rte.innerHTML = `<div class="rte-summary">
+        <span class="rte-toggle-icon${showDetails?' open':''}">▶</span>
+        <span class="rte-name">${entry.pipelineName}</span>
+        ${sevVal !== null ? `<div class="rte-sev-row"><div class="rte-sev-dot" style="background:${sevColor}"></div><span class="rte-sev-pct" style="color:${sevColor}">${sevVal}%</span></div>` : ''}
+        <span class="rte-status-pill ${statusClass}">${statusText}</span>
+        ${entry.excluded ? '<span class="rte-excl-tag">Excluded</span>' : ''}
+        ${entry.comment  ? `<span class="rte-comment-preview" title="${entry.comment.replace(/"/g,'&quot;')}">✎ ${entry.comment}</span>` : ''}
+        ${entry.durationMs != null ? `<span class="rte-ts" title="Server-measured run time">⏱ ${fmtDur(entry.durationMs)}</span>` : ''}
+        <span class="rte-ts">${entry.timestamp}</span>
+      </div>
+      <div class="rte-detail${showDetails?' show':''}">
+        <div class="rte-detail-inner" id="rted-${entry.id}"></div>
+      </div>`;
+
+      // Toggle on click
+      rte.querySelector(".rte-summary").addEventListener("click", function() {
+        const detail = rte.querySelector(".rte-detail");
+        const icon   = rte.querySelector(".rte-toggle-icon");
+        const isOpen = detail.classList.toggle("show");
+        icon.classList.toggle("open", isOpen);
+        if (isOpen) populateEntryDetail(entry, document.getElementById(`rted-${entry.id}`));
+      });
+
+      // If showDetails mode, populate immediately
+      if (showDetails) {
+        // defer so DOM is attached
+        setTimeout(() => {
+          const el = document.getElementById(`rted-${entry.id}`);
+          if (el) populateEntryDetail(entry, el);
+        }, 0);
+      }
+
+      group.appendChild(rte);
+    });
+
+    stagesEl.appendChild(group);
+  });
+}
+
+function populateEntryDetail(entry, body) {
+  if (body.dataset.populated) return;
+  body.dataset.populated = "1";
+  body.innerHTML = "";
+
+  // Comment block
+  if (entry.comment) {
+    const cb = document.createElement("div"); cb.className = "rte-comment-block";
+    cb.innerHTML = `<div class="rte-comment-label">Analyst Notes</div><div>${entry.comment}</div>`;
+    body.appendChild(cb);
+  }
+
+  // Metrics
+  if (entry.metrics.length) {
+    const grid = document.createElement("div"); grid.className = "metrics-grid";
+    entry.metrics.forEach(m => {
+      const mc = document.createElement("div"); mc.className = "metric-card";
+      const cls = m.value==="FAIL"?"fail":m.value==="PASS"?"pass":"";
+      mc.innerHTML = `<div class="metric-label">${m.label}</div><div class="metric-value ${cls}">${m.value}</div><div class="metric-sub">${m.sub}</div>`;
+      grid.appendChild(mc);
+    });
+    body.appendChild(grid);
+  }
+
+  // Severities
+  entry.severities.forEach((s, i) => {
+    const fid   = `rsf-${entry.id}-${i}`;
+    const block = document.createElement("div"); block.className = "severity-block";
+    block.innerHTML = `<div class="sev-header"><span class="sev-title">${s.label}</span><span class="sev-val">${s.value}%</span></div>
+      <div class="sev-track"><div class="sev-fill" id="${fid}" style="background:${s.color}"></div></div>`;
+    body.appendChild(block);
+    setTimeout(() => { const f = document.getElementById(fid); if (f) f.style.width = s.value + "%"; }, 100);
+  });
+
+  // Images
+  entry.images.forEach(img => {
+    const wrap = document.createElement("div"); wrap.className = "image-block";
+    const el   = document.createElement("img"); el.src = `data:${img.mime};base64,${img.data}`; el.alt = img.caption||"";
+    wrap.appendChild(el);
+    if (img.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=img.caption; wrap.appendChild(c); }
+    body.appendChild(wrap);
+  });
+
+  // Plotly charts
+  const plotContainerId = `rplt-${entry.id}`;
+  const plotContainer = document.createElement("div"); plotContainer.id = plotContainerId;
+  body.appendChild(plotContainer);
+  entry.plots.forEach((p, pi) => {
+    const wrap    = document.createElement("div"); wrap.className = "image-block";
+    const plotDiv = document.createElement("div"); plotDiv.style.cssText = "width:100%;min-height:280px;";
+    wrap.appendChild(plotDiv);
+    if (p.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=p.caption; wrap.appendChild(c); }
+    plotContainer.appendChild(wrap);
+    setTimeout(() => {
+      const spec = JSON.parse(p.data);
+      Plotly.newPlot(plotDiv, spec.data, Object.assign({}, spec.layout, {height:300, autosize:true, margin:{l:55,r:35,t:65,b:45}}), {responsive:true, displayModeBar:false});
+    }, 60 + pi * 30);
+  });
+
+  // Videos
+  entry.videos.forEach(v => {
+    const wrap = document.createElement("div"); wrap.className = "video-block";
+    let media;
+    if (v.mime.startsWith("video/")) { media=document.createElement("video"); media.src=`data:${v.mime};base64,${v.data}`; media.controls=true; media.loop=true; }
+    else { media=document.createElement("img"); media.src=`data:${v.mime};base64,${v.data}`; media.alt=v.caption||""; }
+    media.style.width="100%"; wrap.appendChild(media);
+    if (v.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=v.caption; wrap.appendChild(c); }
+    body.appendChild(wrap);
+  });
+
+  // Marker videos (Event Localizer)
+  (entry.markerVideos || []).forEach(mv => renderMarkerVideo(body, mv));
+
+  // Unified JSON result + LLM summary (e.g. the Diagnostic Report)
+  (entry.results || []).forEach(r => renderJsonResultInto(body, r.title || "Unified Diagnostic JSON", r.report || r));
+  (entry.llmSummaries || []).forEach(s => renderLLMSummaryInto(body, s.title || "LLM Diagnostic Summary", s.markdown || ""));
+
+  // Logs
+  if (entry.logs.length) {
+    const details = document.createElement("details");
+    details.style.cssText = "border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;";
+    const summary = document.createElement("summary");
+    summary.style.cssText = "padding:8px 13px;font-size:12px;color:var(--muted);cursor:pointer;background:var(--bg);user-select:none;list-style:none;";
+    summary.textContent = `Logs (${entry.logs.length})`;
+    details.appendChild(summary);
+    const logDiv = document.createElement("div");
+    logDiv.style.cssText = "padding:10px 14px;font-family:var(--mono);font-size:12px;line-height:1.8;";
+    entry.logs.forEach(l => {
+      const line = document.createElement("div"); line.className = `log-line log-${l.level}`;
+      const pfx  = l.level==="success"?"✓":l.level==="warn"?"⚠":l.level==="error"?"✗":"·";
+      line.innerHTML = `<span class="log-ts">${l.ts}</span><span class="log-msg">${pfx} ${l.text}</span>`;
+      logDiv.appendChild(line);
+    });
+    details.appendChild(logDiv); body.appendChild(details);
+  }
+}
+
+// ── Per-test history ──────────────────────────────────────────────────────────
+function renderPipelineHistory(pid) {
+  const pane  = document.getElementById("histPane");
+  const empty = document.getElementById("histEmpty");
+  const pool  = dsDetailVideo ? (dsDetailVideo.runs || []) : reportData;
+  const entries = pool.filter(e => e.pipelineId === pid).slice().reverse();
+
+  if (!entries.length) {
+    pane.style.display = "none"; pane.innerHTML = "";
+    empty.style.display = "flex";
+    empty.querySelector(".empty-text").textContent = "No previous runs for this test.";
+    return;
+  }
+  empty.style.display = "none";
+  pane.style.display  = "flex";
+  pane.innerHTML = "";
+
+  entries.forEach((entry, idx) => {
+    const num = entries.length - idx;
+    const mainSev = entry.severities[0];
+    const statusCls  = entry.status === "done" ? "pill-done" : entry.status === "error" ? "pill-error" : "pill-running";
+    const statusText = entry.status === "done" ? "Done" : entry.status === "error" ? "Error" : "Running";
+
+    const div = document.createElement("div"); div.className = "hist-entry";
+    div.innerHTML = `<div class="hist-entry-hdr">
+      <span class="hist-idx">#${num}</span>
+      ${mainSev ? `<div class="rte-sev-row"><div class="rte-sev-dot" style="background:${mainSev.color}"></div><span class="rte-sev-pct" style="color:${mainSev.color}">${mainSev.value}%</span></div>` : ""}
+      <span class="hist-name">${entry.pipelineName}</span>
+      <span class="rte-status-pill ${statusCls}">${statusText}</span>
+      ${entry.durationMs != null ? `<span class="hist-ts" title="Server-measured run time">⏱ ${fmtDur(entry.durationMs)}</span>` : ""}
+      <span class="hist-ts">${entry.timestamp}</span>
+      <span class="hist-chevron">▶</span>
+    </div>
+    <div class="hist-body" id="hb-${entry.id}"></div>`;
+
+    div.querySelector(".hist-entry-hdr").addEventListener("click", () => {
+      const body = document.getElementById(`hb-${entry.id}`);
+      const chev = div.querySelector(".hist-chevron");
+      const open = body.classList.toggle("show");
+      chev.classList.toggle("open", open);
+      if (open) populateEntryDetail(entry, body);
+    });
+    pane.appendChild(div);
+  });
+}
+
+function restoreLatestOrClear(pid) {
+  const pool    = dsDetailVideo ? (dsDetailVideo.runs || []) : reportData;
+  const entries = pool.filter(e => e.pipelineId === pid);
+  if (entries.length) {
+    restoreEntryToOutputPane(entries[entries.length - 1]);
+  } else {
+    document.getElementById("outputTitle").textContent = "Report";
+    setStatus("idle", "Idle");
+    document.getElementById("emptyState").style.display = "flex";
+    document.getElementById("emptyState").querySelector(".empty-text").textContent = "No results yet. Run this test to see results.";
+    document.getElementById("logPane").style.display = "none";
+    document.getElementById("logPane").innerHTML = "";
+    document.getElementById("resultsPane").classList.remove("show");
+    document.getElementById("metricsGrid").innerHTML = "";
+    document.getElementById("imageBlocks").innerHTML = "";
+    document.getElementById("severityBlock").style.display = "none";
+    document.getElementById("testReportFooter").classList.remove("show");
+  }
+}
+
+function restoreEntryToOutputPane(entry) {
+  document.getElementById("outputTitle").textContent = entry.pipelineName;
+  setStatus(entry.status, entry.status === "done" ? "Done" : entry.status === "error" ? "Error" : "Running");
+  document.getElementById("emptyState").style.display = "none";
+
+  const lp = document.getElementById("logPane");
+  lp.innerHTML = ""; lp.style.display = entry.logs.length ? "block" : "none";
+  entry.logs.forEach(l => {
+    const line = document.createElement("div"); line.className = `log-line log-${l.level}`;
+    const pfx = l.level==="success"?"✓":l.level==="warn"?"⚠":l.level==="error"?"✗":"·";
+    line.innerHTML = `<span class="log-ts">${l.ts}</span><span class="log-msg">${pfx} ${l.text}</span>`;
+    lp.appendChild(line);
+  });
+
+  const mg = document.getElementById("metricsGrid"); mg.innerHTML = "";
+  entry.metrics.forEach(m => {
+    const c = document.createElement("div"); c.className = "metric-card";
+    const cls = m.value==="FAIL"?"fail":m.value==="PASS"?"pass":"";
+    c.innerHTML = `<div class="metric-label">${m.label}</div><div class="metric-value ${cls}">${m.value}</div><div class="metric-sub">${m.sub||""}</div>`;
+    mg.appendChild(c);
+  });
+
+  if (entry.severities.length) showSeverity(entry.severities[0].label, entry.severities[0].value, entry.severities[0].color);
+  else document.getElementById("severityBlock").style.display = "none";
+
+  const ib = document.getElementById("imageBlocks"); ib.innerHTML = "";
+  entry.images.forEach(img => {
+    const wrap = document.createElement("div"); wrap.className = "image-block";
+    const el = document.createElement("img"); el.src = `data:${img.mime};base64,${img.data}`; el.alt = img.caption||"";
+    wrap.appendChild(el);
+    if (img.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=img.caption; wrap.appendChild(c); }
+    ib.appendChild(wrap);
+  });
+  entry.plots.forEach((p, pi) => {
+    const wrap = document.createElement("div"); wrap.className = "image-block";
+    const pd = document.createElement("div"); pd.style.cssText = "width:100%;min-height:300px;";
+    wrap.appendChild(pd);
+    if (p.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=p.caption; wrap.appendChild(c); }
+    ib.appendChild(wrap);
+    setTimeout(() => { const spec=JSON.parse(p.data); Plotly.newPlot(pd, spec.data, Object.assign({},spec.layout,{autosize:true}), {responsive:true,displayModeBar:true,displaylogo:false}); }, 60+pi*30);
+  });
+  entry.videos.forEach(v => {
+    const wrap = document.createElement("div"); wrap.className = "video-block";
+    let media;
+    if (v.mime.startsWith("video/")) { media=document.createElement("video"); media.src=`data:${v.mime};base64,${v.data}`; media.controls=true; media.loop=true; }
+    else { media=document.createElement("img"); media.src=`data:${v.mime};base64,${v.data}`; media.alt=v.caption||""; }
+    media.style.width="100%"; wrap.appendChild(media);
+    if (v.caption) { const c=document.createElement("div"); c.className="image-caption"; c.textContent=v.caption; wrap.appendChild(c); }
+    ib.appendChild(wrap);
+  });
+  (entry.markerVideos || []).forEach(mv => renderMarkerVideo(ib, mv));
+  (entry.results || []).forEach(r => renderJsonResultInto(ib, r.title || "Unified Diagnostic JSON", r.report || r));
+  (entry.llmSummaries || []).forEach(s => renderLLMSummaryInto(ib, s.title || "LLM Diagnostic Summary", s.markdown || ""));
+
+  if (entry.metrics.length || entry.severities.length || entry.images.length || entry.plots.length || entry.videos.length || (entry.markerVideos||[]).length || (entry.results||[]).length || (entry.llmSummaries||[]).length)
+    document.getElementById("resultsPane").classList.add("show");
+
+  lastEntry = entry;
+  showTestReportFooter(entry);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  DATASET / BATCH MODE  (self-contained; reuses report rendering helpers)
+// ════════════════════════════════════════════════════════════════════════════
+let dsVideos = [];           // {id, name, status, runs:[entry], maxSev}
+let dsSelected = new Set();   // selected pipeline ids
+let dsBusy = false;
+let dsAbort   = null;    // AbortController for the current in-flight tool
+let dsControl = null;    // pending user action while a tool runs: "pause" | "abort"
+let batchState = null;   // resumable batch cursor; non-null while running or paused
+
+// Batch API keys — held in memory for THIS browser session only. Never written
+// to localStorage/disk, and redacted out of anything we store on run entries or
+// export (see redactSettings). Blank → the server's .env credential is used.
+let batchKeys = { openai: "", openrouter: "" };
+
+// Per-tool setting overrides for batch runs, keyed by pipeline id — e.g. run the
+// Deformation Specialist on Gemini 3.1 Pro while everything else uses the default.
+// Session-only (never localStorage); the exact settings a run actually used are
+// still captured per-run in entry.settings, and the whole config round-trips in
+// the batch export (redacted). "__"-prefixed keys are frontend-only orchestration
+// (hypothesis→specialist routing) and are stripped before hitting the backend.
+let batchSettings = {};   // { pipelineId: { settingId: value, __route? } }
+
+// The Stage 3 pipeline id: one forced-choice question replaces what used to
+// be seven separate per-category specialists the Hypothesis Generator routed
+// between (see SPECIALISTS in physics_hypothesis_generator.py — still used
+// for its own ranking/triage, just no longer a routing target since there's
+// only one Stage 3 test to run).
+const STAGE3_PIPE = "s3_specialist";
+
+// Effective batch settings for a pipeline: defaults overlaid with session
+// overrides, minus the frontend-only "__" orchestration keys.
+function batchSettingsFor(p) {
+  const out = dsDefaultSettings(p);
+  const ov = batchSettings[p.id] || {};
+  for (const k in ov) if (!k.startsWith("__")) out[k] = ov[k];
+  return out;
+}
+
+// After the Hypothesis Generator runs for a video, decide whether to auto-run
+// the Stage 3 specialist. "off" → don't; "auto" (default) → do, once — the
+// MCQ always checks every family in one call, so there is nothing left to
+// pick between the way the old per-category specialists needed.
+function routedSpecialistsFor(hypEntry) {
+  const cfg = batchSettings["s2_hypothesis_generator"] || {};
+  const route = cfg.__route || "auto";
+  if (route === "off") return [];
+  const p = allPipelines[STAGE3_PIPE];
+  return p && !p.dummy ? [p] : [];
+}
+
+// Batch config for export/round-trip (selection + per-tool overrides), with any
+// secret-looking fields blanked defensively (batch panels omit key fields anyway).
+function exportBatchConfig() {
+  const settings = {};
+  for (const pid in batchSettings) settings[pid] = redactSettings(batchSettings[pid]);
+  return { selected: [...dsSelected], settings };
+}
+
+// Blank out secret-looking fields in a settings object before we store/export
+// it, so an entered API key never lands on disk. The real key still goes to the
+// server in the live request; only the retained copy is redacted.
+function redactSettings(obj) {
+  const out = {};
+  for (const k in obj) {
+    out[k] = (/(api[_-]?key|token|secret|password)/i.test(k) && obj[k]) ? "" : obj[k];
+  }
+  return out;
+}
+
+// Which provider's key a pipeline needs, inferred from its (default) model.
+function providerOfModel(modelVal) {
+  if (typeof modelVal === "string") {
+    if (modelVal.startsWith("openrouter:")) return "openrouter";
+    if (modelVal.startsWith("openai:"))     return "openai";
+    return null;                       // a local model (e.g. qwen2.5-vl-7b) → no key
+  }
+  return undefined;                    // no model field at all (e.g. s4_report → OpenAI-only)
+}
+
+// Inject the session batch key into a pipeline's settings when it takes an
+// api_key and the user hasn't already supplied one. Mutates settingsObj in place.
+function applyBatchKeys(p, settingsObj) {
+  if (!(p.settings || []).some(s => s.id === "api_key") || settingsObj.api_key) return;
+  const prov = providerOfModel(settingsObj.model ?? settingsObj.naming_model);
+  const key = prov === "openrouter" ? batchKeys.openrouter
+            : (prov === "openai" || prov === undefined) ? batchKeys.openai
+            : "";                      // prov === null → local model, no key
+  if (key) settingsObj.api_key = key;
+}
+
+function updateBatchKeyStatus() {
+  const el = document.getElementById("batchKeyStatus");
+  if (!el) return;
+  const set = [];
+  if (batchKeys.openai)     set.push("OpenAI");
+  if (batchKeys.openrouter) set.push("OpenRouter");
+  el.textContent = set.length
+    ? `Using entered ${set.join(" + ")} key${set.length > 1 ? "s" : ""} this session (not saved).`
+    : "No keys entered — batch runs use the server's .env credentials.";
+}
+
+function nowTs() { return new Date().toTimeString().slice(0, 8); }
+function sevColorFor(v) { return v > 50 ? "#E24B4A" : v > 25 ? "#EF9F27" : "#4CAF50"; }
+// Server-measured per-run duration (ms) → compact label. "" when unknown
+// (e.g. an old export or a still-running entry with no timing event yet).
+function fmtDur(ms) {
+  if (ms == null || !isFinite(ms)) return "";
+  const s = ms / 1000;
+  if (s < 1)   return `${Math.round(ms)}ms`;
+  if (s < 60)  return `${s.toFixed(s < 10 ? 1 : 0)}s`;
+  const m = Math.floor(s / 60), rem = Math.round(s % 60);
+  return `${m}m${rem.toString().padStart(2, "0")}s`;
+}
+function sumDur(entries) {
+  const vals = entries.map(e => e.durationMs).filter(v => v != null && isFinite(v));
+  return vals.length ? vals.reduce((a, b) => a + b, 0) : null;
+}
+// Server-measured peak GPU memory (MB) → compact label. "" when unknown
+// (CPU-only run, old export, or a still-running entry).
+function fmtGpu(mb) {
+  if (mb == null || !isFinite(mb)) return "";
+  return mb < 1024 ? `${Math.round(mb)}MB` : `${(mb / 1024).toFixed(1)}GB`;
+}
+
+// ── View switch (grid ⇆ per-video detail) ──────────────────────────────────────
+// The single "Dataset" button doubles as the home/back control — clicking it from
+// a per-video report returns to the grid.
+document.getElementById("dsHomeBtn").addEventListener("click", () => setMode("dataset"));
+function setMode(mode) {
+  document.body.classList.toggle("mode-dataset",   mode === "dataset");
+  document.body.classList.toggle("mode-ds-detail", mode === "ds-detail");
+  const home = document.getElementById("dsHomeBtn");
+  home.classList.toggle("active", mode === "dataset");
+  home.textContent = mode === "ds-detail" ? "← Dataset" : "Dataset";
+  if (mode === "dataset") {
+    dsDetailVideo = null;
+    document.getElementById("dsCrumb").textContent = "";
+    renderDsPipeList();
+  }
+}
+
+// ── Source sub-tabs ─────────────────────────────────────────────────────────────
+document.querySelectorAll(".ds-src-tab").forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll(".ds-src-tab").forEach(x => x.classList.toggle("active", x === t));
+  document.querySelectorAll(".ds-src-panel").forEach(p => p.classList.toggle("active", p.dataset.src === t.dataset.src));
+}));
+
+// ── Pipeline checklist (live, non-stub pipelines only) ─────────────────────────
+function renderDsPipeList() {
+  if (!Object.keys(allPipelines).length) return;
+  const host = document.getElementById("dsPipeList");
+  if (host.dataset.built) return;
+  host.innerHTML = "";
+  STAGES.forEach(stage => {
+    const pipes = stage.pipelines.map(id => allPipelines[id]).filter(p => p && !p.dummy);
+    if (!pipes.length) return;
+    const h = document.createElement("div"); h.className = "ds-pipe-stage";
+    h.textContent = `Stage ${stage.num} · ${stage.name}`; h.style.color = stage.color;
+    host.appendChild(h);
+    pipes.forEach(p => {
+      // A tool is "customizable" if it exposes any non-key settings, or is the
+      // Hypothesis Generator (which also gets the specialist-routing control).
+      const cfgDefs = (p.settings || []).filter(s => s.type !== "password" && s.id !== "api_key");
+      const hasCfg = cfgDefs.length || p.id === "s2_hypothesis_generator";
+      const row = document.createElement("div"); row.className = "ds-pipe-row";
+      row.innerHTML =
+        `<label class="ds-pipe-main"><input type="checkbox" data-pid="${p.id}">` +
+        `<span class="ds-pipe-name">${p.name}</span><span class="ds-pipe-badge">${p.badge}</span></label>` +
+        (hasCfg ? `<button class="ds-pipe-gear" type="button" title="Customize model &amp; settings">⚙</button>` : "");
+      const cb = row.querySelector("input");
+      cb.addEventListener("change", () => { cb.checked ? dsSelected.add(p.id) : dsSelected.delete(p.id); updateDsRunBtn(); });
+      host.appendChild(row);
+      if (hasCfg) {
+        const panel = document.createElement("div"); panel.className = "ds-pipe-settings"; panel.dataset.pid = p.id;
+        host.appendChild(panel);
+        const gear = row.querySelector(".ds-pipe-gear");
+        gear.addEventListener("click", () => {
+          const open = panel.classList.toggle("show");
+          gear.classList.toggle("on", open);
+          if (open && !panel.dataset.built) { buildBatchSettingsPanel(panel, p, cfgDefs); panel.dataset.built = "1"; }
+        });
+      }
+    });
+  });
+  host.dataset.built = "1";
+}
+
+// Build one tool's per-batch settings panel: the full (non-key) settings form
+// pre-filled with the session override or defaults, plus — for the Hypothesis
+// Generator — the "auto-run specialist" routing control. All changes persist
+// into batchSettings for this session.
+function buildBatchSettingsPanel(panel, p, cfgDefs) {
+  panel.innerHTML = "";
+  const saved = batchSettings[p.id] || {};
+
+  if (p.id === "s2_hypothesis_generator") {
+    const box = document.createElement("div"); box.className = "ds-route-box";
+    box.innerHTML = `<label class="setting-label">After ranking, auto-run Stage 3</label>`;
+    const sel = document.createElement("select"); sel.className = "setting-select"; sel.dataset.route = "1";
+    const opts = [["off", "Off — just rank"], ["auto", "Auto — run the Stage 3 specialist"]];
+    opts.forEach(([v, l]) => {
+      const o = document.createElement("option"); o.value = v; o.textContent = l;
+      if ((saved.__route || "auto") === v) o.selected = true; sel.appendChild(o);
+    });
+    box.appendChild(sel);
+    const note = document.createElement("div"); note.className = "ds-set-note";
+    note.textContent = "The Stage 3 specialist uses its own settings below / defaults. Select it as a test too and it won't run twice.";
+    box.appendChild(note);
+    panel.appendChild(box);
+    sel.addEventListener("change", () => persistBatchPanel(panel, p));
+  }
+
+  const fields = document.createElement("div");
+  buildSettingsFields(fields, cfgDefs, saved);
+  panel.appendChild(fields);
+  fields.addEventListener("change", () => persistBatchPanel(panel, p));
+  fields.addEventListener("input", () => persistBatchPanel(panel, p));
+
+  if ((p.settings || []).some(s => s.id === "api_key")) {
+    const keyNote = document.createElement("div"); keyNote.className = "ds-set-note";
+    keyNote.innerHTML = "🔑 API keys are set once in section 3 (session-only) and applied by provider.";
+    panel.appendChild(keyNote);
+  }
+
+  const foot = document.createElement("div"); foot.style.marginTop = "4px";
+  const reset = document.createElement("button"); reset.type = "button"; reset.className = "ds-set-reset";
+  reset.textContent = "Reset to defaults";
+  reset.addEventListener("click", () => {
+    delete batchSettings[p.id];
+    panel.dataset.built = "";
+    buildBatchSettingsPanel(panel, p, cfgDefs);
+    panel.dataset.built = "1";
+    updateBatchSettingsBadge();
+  });
+  foot.appendChild(reset); panel.appendChild(foot);
+}
+
+// Persist a panel's current values (including the routing pseudo-key) into
+// the session batchSettings store.
+function persistBatchPanel(panel, p) {
+  const vals = readSettingsFields(panel);   // reads every data-sid field in the panel
+  const routeSel = panel.querySelector("[data-route]");
+  if (routeSel) vals.__route = routeSel.value;
+  batchSettings[p.id] = vals;
+  updateBatchSettingsBadge();
+}
+
+// Rebuild the pipeline checklist from scratch and re-apply the current dsSelected
+// state (used after importing a batch config). Panels rebuild lazily from
+// batchSettings the next time their ⚙ is opened.
+function refreshDsPipeList() {
+  const host = document.getElementById("dsPipeList");
+  if (!host) return;
+  host.dataset.built = "";
+  renderDsPipeList();
+  host.querySelectorAll("input[data-pid]").forEach(cb => { cb.checked = dsSelected.has(cb.dataset.pid); });
+}
+
+// Reflect how many tools have custom settings on the "Select tests" step.
+function updateBatchSettingsBadge() {
+  const el = document.getElementById("dsCustomCount");
+  if (!el) return;
+  const n = Object.keys(batchSettings).length;
+  el.textContent = n ? `${n} customized` : "";
+}
+document.getElementById("dsPipeAll").addEventListener("click", () => {
+  document.querySelectorAll("#dsPipeList input").forEach(cb => { cb.checked = true; dsSelected.add(cb.dataset.pid); });
+  updateDsRunBtn();
+});
+document.getElementById("dsPipeNone").addEventListener("click", () => {
+  document.querySelectorAll("#dsPipeList input").forEach(cb => cb.checked = false);
+  dsSelected.clear(); updateDsRunBtn();
+});
+
+// ── Upload source ───────────────────────────────────────────────────────────────
+const dsDrop = document.getElementById("dsDrop");
+document.getElementById("dsFiles").addEventListener("change", e => addUploadFiles(e.target.files));
+document.getElementById("dsFolder").addEventListener("change", e => addUploadFiles(e.target.files));
+dsDrop.addEventListener("dragover",  e => { e.preventDefault(); dsDrop.classList.add("drag"); });
+dsDrop.addEventListener("dragleave", () => dsDrop.classList.remove("drag"));
+dsDrop.addEventListener("drop",      e => { e.preventDefault(); dsDrop.classList.remove("drag"); addUploadFiles(e.dataTransfer.files); });
+
+const DS_EXTS = [".gif", ".mp4", ".m4v", ".webm", ".mov", ".avi", ".mkv",
+                ".mpg", ".mpeg", ".ogv", ".wmv", ".flv", ".3gp", ".ts", ".mts", ".m2ts"];
+async function addUploadFiles(fileList) {
+  const files = Array.from(fileList).filter(f => DS_EXTS.some(x => f.name.toLowerCase().endsWith(x)));
+  if (!files.length) return;
+  const form = new FormData();
+  files.forEach(f => form.append("files", f, f.name));
+  setDsMainTitle("Uploading…");
+  try {
+    const res = await fetch(`${API}/dataset/upload`, { method: "POST", body: form });
+    const json = await res.json();
+    (json.files || []).forEach(rec => addVideo(rec.id, rec.name));
+    renderDsGrid();
+  } catch (err) { setDsMainTitle("Upload failed: " + err.message); }
+}
+
+// ── HuggingFace source (streaming progress) ────────────────────────────────────
+document.getElementById("hfFetchBtn").addEventListener("click", hfDownload);
+async function hfDownload() {
+  const repo = document.getElementById("hfRepo").value.trim();
+  const status = document.getElementById("hfStatus");
+  status.classList.remove("err");
+  if (!repo) { status.textContent = "Enter a dataset repo id first."; return; }
+  const btn = document.getElementById("hfFetchBtn");
+  btn.disabled = true; status.textContent = "Connecting…";
+  const form = new FormData();
+  form.append("repo_id",   repo);
+  form.append("subfolder", document.getElementById("hfSub").value.trim());
+  form.append("max_files", document.getElementById("hfMax").value || "0");
+  form.append("token",     document.getElementById("hfToken").value.trim());
+  try {
+    const res = await fetch(`${API}/dataset/hf_download`, { method: "POST", body: form });
+    const reader = res.body.getReader(), dec = new TextDecoder(); let buf = "";
+    while (true) {
+      const { done, value } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split("\n"); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        let ev; try { ev = JSON.parse(line); } catch { continue; }
+        if (ev.type === "file")          { addVideo(ev.id, ev.name); renderDsGrid(); status.textContent = `Downloaded ${ev.index}/${ev.total}…`; }
+        else if (ev.type === "progress") { status.textContent = `Downloaded ${ev.done}/${ev.total}…`; }
+        else if (ev.type === "log")      { status.textContent = ev.text; }
+        else if (ev.type === "error")    { status.textContent = ev.text; status.classList.add("err"); }
+        else if (ev.type === "done")     { status.textContent = `Done — ${ev.total} file(s) loaded.`; }
+      }
+    }
+  } catch (err) { status.textContent = "Download failed: " + err.message; status.classList.add("err"); }
+  finally { btn.disabled = false; }
+}
+
+// ── Video registry + grid ───────────────────────────────────────────────────────
+function addVideo(id, name) {
+  if (dsVideos.some(v => v.id === id)) return;
+  dsVideos.push({ id, name, status: "queued", runs: [], maxSev: null });
+  updateDsRunBtn();
+}
+function setDsMainTitle(txt) { document.getElementById("dsMainTitle").textContent = txt; }
+function updateDsRunBtn() {
+  // Disabled while running, and while a paused batch is pending (use Resume/Abort).
+  document.getElementById("dsRunBtn").disabled = dsBusy || !!batchState || !dsVideos.length || !dsSelected.size;
+  document.getElementById("dsClearBtn").style.display = dsVideos.length ? "inline-block" : "none";
+}
+document.getElementById("dsClearBtn").addEventListener("click", () => {
+  if (dsBusy) return;
+  dsVideos = []; renderDsGrid(); updateDsRunBtn();
+  fetch(`${API}/dataset/clear`, { method: "POST" }).catch(() => {});
+});
+
+function renderDsGrid() {
+  const grid = document.getElementById("dsGrid");
+  const empty = document.getElementById("dsEmpty");
+  empty.style.display = dsVideos.length ? "none" : "flex";
+  setDsMainTitle(dsVideos.length ? `${dsVideos.length} video${dsVideos.length !== 1 ? "s" : ""}` : "No videos loaded");
+  grid.innerHTML = "";
+  dsVideos.forEach(v => {
+    const hasReport = v.runs.length > 0;
+    const card = document.createElement("div");
+    card.className = "ds-card" + (hasReport ? "" : " no-report");
+    const sevColor = v.maxSev != null ? sevColorFor(v.maxSev) : null;
+    const dots = hasReport
+      ? `<div class="ds-card-dots">${v.runs.map(e => `<span class="ds-dot" style="background:${e.severities[0] ? e.severities[0].color : "var(--border)"}" title="${e.pipelineName}"></span>`).join("")}</div>`
+      : "";
+    card.innerHTML =
+      dsThumbHtml(v) +
+      `<div class="ds-card-body">` +
+        `<div class="ds-card-name" title="${v.name}">${v.name}</div>` +
+        `<div class="ds-card-foot">` +
+          `<span class="ds-status ${v.status}">${v.status}</span>` +
+          (v.maxSev != null ? `<span class="ds-sev-chip" style="background:${sevColor}">${v.maxSev}%</span>` : "") +
+        `</div>` + dots +
+      `</div>`;
+
+    // Wire up the thumbnail: hover-to-play for <video>, graceful fallback if the
+    // browser can't decode the format (e.g. AVI / MKV / WMV).
+    const media = card.querySelector(".ds-card-thumb");
+    if (media) {
+      media.addEventListener("error", () => dsThumbFallback(card, v), { once: true });
+      if (media.tagName === "VIDEO") {
+        card.addEventListener("mouseenter", () => { media.play().catch(() => {}); });
+        card.addEventListener("mouseleave", () => { try { media.pause(); media.currentTime = 0; } catch {} });
+      }
+    }
+    // Any card opens its detail report — even with no batch results yet, so the
+    // user can run individual tests on a single uploaded video.
+    card.addEventListener("click", () => openVideoReport(v));
+    grid.appendChild(card);
+  });
+}
+
+// GIFs animate in an <img>; real videos use a <video> (first frame via #t=0.1,
+// playing on hover). Anything the browser can't decode falls back to an icon.
+function dsThumbHtml(v) {
+  const url = `${API}/dataset/file/${v.id}`;
+  if (/\.gif$/i.test(v.name)) return `<img class="ds-card-thumb" loading="lazy" src="${url}" alt="">`;
+  return `<video class="ds-card-thumb" muted loop playsinline preload="metadata" src="${url}#t=0.1"></video>`;
+}
+function dsThumbFallback(card, v) {
+  const m = card.querySelector(".ds-card-thumb");
+  if (!m) return;
+  const ext = (v.name.split(".").pop() || "vid").toUpperCase().slice(0, 5);
+  const fb = document.createElement("div");
+  fb.className = "ds-card-thumb ds-thumb-fallback";
+  fb.innerHTML = `<span class="ds-fb-icon">🎞</span><span class="ds-fb-ext">${ext}</span>`;
+  m.replaceWith(fb);
+}
+
+// ── Batch run: resumable driver with Pause/Resume + hard Abort ─────────────────
+// A batch is a cursor over (video → tool queue). Pause and Abort both cancel the
+// in-flight tool via AbortController; the difference is what happens after —
+// Pause keeps the cursor so Resume re-runs the cancelled tool and continues,
+// Abort discards it. Resume works only within this browser session.
+// (dsAbort / dsControl / batchState are declared with the other dataset state.)
+
+document.getElementById("dsRunBtn").addEventListener("click", runDatasetBatch);
+document.getElementById("dsPauseBtn").addEventListener("click", () => {
+  if (!dsBusy) return;
+  dsControl = "pause";
+  document.getElementById("dsPauseBtn").disabled = true;
+  if (dsAbort) dsAbort.abort();                 // stop the current tool now
+});
+document.getElementById("dsResumeBtn").addEventListener("click", () => {
+  if (!dsBusy && batchState) driveBatch();
+});
+document.getElementById("dsAbortBtn").addEventListener("click", () => {
+  if (!dsBusy && !batchState) return;
+  dsControl = "abort";
+  if (dsAbort) dsAbort.abort();
+  if (!dsBusy) finishBatch("aborted");          // aborting while already paused
+});
+
+async function runDatasetBatch() {
+  if (dsBusy || batchState) return;
+  // Run in stage order so evidence flows correctly (e.g. the Hypothesis
+  // Generator runs before any specialist it routes to, s4_report runs last).
+  const ORDER = STAGES.flatMap(s => s.pipelines);
+  const pipes = [...dsSelected].map(id => allPipelines[id]).filter(Boolean)
+                  .sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
+  if (!pipes.length || !dsVideos.length) return;
+  dsVideos.forEach(v => { v.status = "queued"; v.runs = []; v.maxSev = null; });
+  renderDsGrid();
+  batchState = { pipes, vi: 0, done: 0, total: dsVideos.length * pipes.length, video: null };
+  document.getElementById("dsProgressWrap").style.display = "block";
+  setDsProgress(0, batchState.total);
+  await driveBatch();
+}
+
+// Run/continue the batch from batchState. Returns when the batch completes, is
+// paused, or is aborted. The per-video cursor (queue, qi, vSignals) lives in
+// batchState.video so a Resume picks up exactly where it left off.
+async function driveBatch() {
+  if (!batchState) return;
+  dsBusy = true; dsControl = null;
+  setBatchControls("running");
+  const btn = document.getElementById("dsRunBtn"); btn.classList.add("loading"); btn.disabled = true;
+  const { pipes } = batchState;
+
+  for (; batchState.vi < dsVideos.length; batchState.vi++) {
+    const v = dsVideos[batchState.vi];
+    if (!batchState.video || batchState.video.v !== v) {
+      v.status = "running"; v.runs = []; v.maxSev = null; renderDsGrid();
+      const queue = [...pipes];
+      batchState.video = { v, queue, inQueue: new Set(queue.map(p => p.id)), routedIds: new Set(), qi: 0, vSignals: {} };
+    }
+    const vs = batchState.video;
+    for (; vs.qi < vs.queue.length; vs.qi++) {
+      // Stop cleanly between tools (Pause/Abort requested after the previous
+      // tool finished rather than being cancelled mid-run).
+      if (dsControl) { finishBatch(dsControl === "abort" ? "aborted" : "paused"); return; }
+      const p = vs.queue[vs.qi];
+      const entry = makeDsEntry(p);
+      if (vs.routedIds.has(p.id)) {
+        entry.routedFrom = "s2_hypothesis_generator";
+        entry.logs.push({ level: "info", text: "Auto-selected by the Hypothesis Generator's routing.", ts: nowTs() });
+      }
+      v.runs.push(entry);
+      dsAbort = new AbortController();
+      try {
+        await streamRunById(v.id, p, entry, vs.vSignals, v, dsAbort.signal);
+      } catch (err) {
+        if (dsControl || err.name === "AbortError") {
+          // User cancelled this tool: drop its partial entry so Resume re-runs it
+          // from scratch (qi is left pointing at it).
+          v.runs.pop(); renderDsGrid();
+          finishBatch(dsControl === "abort" ? "aborted" : "paused");
+          return;
+        }
+        entry.status = "error"; entry.logs.push({ level: "error", text: String(err), ts: nowTs() });
+      } finally { dsAbort = null; }
+      const sev = entry.severities[0]?.value;
+      if (sev != null) v.maxSev = Math.max(v.maxSev ?? 0, sev);
+      if (p.id === "s2_hypothesis_generator") {
+        // Insert right after the current position, NOT at the end of the queue:
+        // s4_report may already be queued later (its stage sorts after Stage 2),
+        // and appending would let the report run before a routed specialist ever
+        // executes — the report would see an empty evidence bus. Splicing here
+        // guarantees routed specialists run before anything queued after this point.
+        const toInsert = routedSpecialistsFor(entry).filter(rp => !vs.inQueue.has(rp.id));
+        toInsert.forEach(rp => { vs.inQueue.add(rp.id); vs.routedIds.add(rp.id); batchState.total++; });
+        if (toInsert.length) vs.queue.splice(vs.qi + 1, 0, ...toInsert);
+      }
+      batchState.done++; setDsProgress(batchState.done, batchState.total); renderDsGrid();
+    }
+    v.status = v.runs.some(e => e.status === "error") ? "error" : "done";
+    batchState.video = null;
+    renderDsGrid();
+  }
+  finishBatch("done");
+}
+
+// Wind the driver down: "paused" keeps the cursor for Resume; "aborted"/"done"
+// discard it. Updates the controls and any unsettled video statuses.
+function finishBatch(outcome) {
+  dsBusy = false;
+  document.getElementById("dsRunBtn").classList.remove("loading");
+  if (outcome === "paused") {
+    setBatchControls("paused");
+  } else {
+    if (outcome === "aborted") {
+      dsVideos.forEach(v => { if (v.status === "running" || v.status === "queued")
+        v.status = (v.runs && v.runs.length) ? (v.runs.some(e => e.status === "error") ? "error" : "done") : "queued"; });
+    }
+    batchState = null; dsControl = null;
+    setBatchControls("idle");
+    renderDsGrid();
+  }
+  updateDsRunBtn();
+}
+
+// Show the right controls for the driver's phase (running / paused / idle).
+function setBatchControls(phase) {
+  const ctrls  = document.getElementById("dsRunCtrls");
+  const pause  = document.getElementById("dsPauseBtn");
+  const resume = document.getElementById("dsResumeBtn");
+  const runTxt = document.getElementById("dsRunBtn").querySelector(".btn-text");
+  if (phase === "idle") { ctrls.style.display = "none"; runTxt.textContent = "Run batch"; return; }
+  ctrls.style.display = "flex";
+  const running = phase === "running";
+  pause.style.display  = running ? "inline-block" : "none"; pause.disabled = false;
+  resume.style.display = running ? "none" : "inline-block";
+  runTxt.textContent   = running ? "Running…" : "Paused";
+}
+function setDsProgress(done, total) {
+  document.getElementById("dsProgressFill").style.width = total ? (done / total * 100) + "%" : "0";
+  document.getElementById("dsProgressText").textContent = `${done} / ${total}`;
+}
+
+function makeDsEntry(p) {
+  const stage = STAGES.find(s => s.pipelines.includes(p.id)) || {};
+  return {
+    id: "ds" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    stageId: stage.id, stageCls: stage.cls, stageNum: stage.num, stageName: stage.name, stageSubtitle: stage.subtitle,
+    pipelineId: p.id, pipelineName: p.name, timestamp: nowTs(), status: "running",
+    logs: [], metrics: [], severities: [], images: [], videos: [], plots: [], markerVideos: [],
+    results: [], llmSummaries: [], excluded: false, comment: "",
+  };
+}
+function dsDefaultSettings(p) {
+  const out = {}; (p.settings || []).forEach(s => { out[s.id] = s.default; }); return out;
+}
+
+async function streamRunById(fileId, p, entry, vSignals, video, signal) {
+  const form = new FormData();
+  form.append("pipeline_id", p.id);
+  form.append("file_id", fileId);
+  let settingsObj = batchSettingsFor(p);   // defaults + this batch's per-tool overrides
+  if (p.id === "s2_event_localizer") settingsObj.stage1_signals = Object.values(vSignals || {});
+  // Final Diagnosis needs this video's own prior runs — same forwarding the
+  // single-video/detail-mode run paths already do (exclude the s4_report
+  // entry itself, already pushed onto video.runs before this call).
+  if (p.id === "s4_report") {
+    settingsObj.previous_results = (video?.runs || [])
+      .filter(r => !r.excluded && r.pipelineId !== "s4_report")
+      .map(r => ({
+        id: r.id, stageId: r.stageId, stageName: r.stageName, stageNum: r.stageNum,
+        pipelineId: r.pipelineId, pipelineName: r.pipelineName,
+        timestamp: r.timestamp, status: r.status,
+        metrics: r.metrics || [], severities: r.severities || [],
+        logs: r.logs || [], comment: r.comment || "", excluded: r.excluded || false,
+      }));
+    settingsObj.video_name = video?.name || "uploaded video";
+    entry.logs.push({
+      level: settingsObj.previous_results.length ? "info" : "warn",
+      text: settingsObj.previous_results.length
+        ? `Forwarding ${settingsObj.previous_results.length} previous test result(s) into the final diagnosis.`
+        : "No previous test results found yet — run some earlier tests first.",
+      ts: nowTs(),
+    });
+  }
+  applyBatchKeys(p, settingsObj);                 // inject session key (if any) before sending
+  entry.settings = redactSettings(settingsObj);   // store WITHOUT the key
+  if (Object.keys(settingsObj).length) form.append("settings", JSON.stringify(settingsObj));
+
+  const res = await fetch(`${API}/dataset/run`, { method: "POST", body: form, signal });
+  const reader = res.body.getReader(), dec = new TextDecoder(); let buf = "";
+  while (true) {
+    const { done, value } = await reader.read(); if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split("\n"); buf = lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      let ev; try { ev = JSON.parse(line); } catch { continue; }
+      if (ev.type === "signal") {
+        vSignals[ev.source] = { source: ev.source, source_name: ev.source_name || ev.source,
+                                fps: ev.fps, n_frames: ev.n_frames, signals: ev.signals || [],
+                                severity: ev.severity, type_severities: ev.type_severities };
+      }
+      applyEventToEntry(ev, entry);
+    }
+  }
+  if (entry.status === "running") entry.status = "done";
+}
+
+// Mutates only the entry object (no single-video DOM side effects).
+function applyEventToEntry(ev, entry) {
+  switch (ev.type) {
+    case "log":          entry.logs.push({ level: ev.level, text: ev.text, ts: nowTs() }); break;
+    case "metric":       entry.metrics.push({ label: ev.label, value: ev.value, sub: ev.sub }); break;
+    case "severity":     entry.severities.push({ label: ev.label, value: ev.value, color: ev.color }); break;
+    case "image":        entry.images.push({ data: ev.data, mime: ev.mime, caption: ev.caption }); break;
+    case "plotly":       entry.plots.push({ data: ev.data, caption: ev.caption }); break;
+    case "video":        entry.videos.push({ data: ev.data, mime: ev.mime, caption: ev.caption }); break;
+    case "marker_video": entry.markerVideos.push(ev); break;
+    case "signal":       (entry._signals ??= {})[ev.source] = { source: ev.source, source_name: ev.source_name || ev.source, fps: ev.fps, n_frames: ev.n_frames, signals: ev.signals || [], severity: ev.severity, type_severities: ev.type_severities }; break;
+    case "result":        (entry.results ??= []).push(ev); break;
+    case "llm_summary":   (entry.llmSummaries ??= []).push(ev); break;
+    case "timing":       entry.durationMs = ev.duration_ms; entry.gpuMb = ev.gpu_mb ?? null; break;
+    case "done":         entry.status = "done"; break;
+    case "error":        entry.logs.push({ level: "error", text: ev.text, ts: nowTs() }); entry.status = "error"; break;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  EXPORT / IMPORT — save runs to a JSON file, reload them later for
+//  benchmarking. No server-side storage: the file IS the save (per-video or
+//  whole batch). Imported videos have no backing upload, so video preview is
+//  unavailable for them (previewAvailable: false) — everything else (logs,
+//  metrics, severities, settings used) round-trips exactly.
+// ════════════════════════════════════════════════════════════════════════════
+const PL_EXPORT_SCHEMA = "physicslens_export";
+
+function _exportEntry(entry, includeVisuals) {
+  const out = {
+    id: entry.id, stageId: entry.stageId, stageName: entry.stageName, stageNum: entry.stageNum,
+    pipelineId: entry.pipelineId, pipelineName: entry.pipelineName,
+    timestamp: entry.timestamp, status: entry.status,
+    durationMs: entry.durationMs ?? null,
+    gpuMb: entry.gpuMb ?? null,
+    routedFrom: entry.routedFrom || null,
+    metrics: entry.metrics || [], severities: entry.severities || [],
+    logs: entry.logs || [], comment: entry.comment || "", excluded: !!entry.excluded,
+    settings: entry.settings || {},
+    results: entry.results || [], llmSummaries: entry.llmSummaries || [],
+  };
+  if (includeVisuals) {
+    out.images = entry.images || []; out.plots = entry.plots || [];
+    out.videos = entry.videos || []; out.markerVideos = entry.markerVideos || [];
+  } else {
+    out.imageCount = (entry.images || []).length;
+    out.plotCount = (entry.plots || []).length;
+    out.videoCount = (entry.videos || []).length;
+    out.markerVideoCount = (entry.markerVideos || []).length;
+  }
+  return out;
+}
+
+function _exportVideo(v, includeVisuals) {
+  return {
+    name: v.name, status: v.status, maxSev: v.maxSev ?? null,
+    runs: (v.runs || []).map(e => _exportEntry(e, includeVisuals)),
+  };
+}
+
+function _downloadJson(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function exportDsData() {
+  const includeVisuals = document.getElementById("dsExportVisuals").checked;
+  const ts = new Date().toISOString().replace(/[:.]/g, "-");
+
+  if (dsDetailVideo) {   // inside a per-video report -> export just this video
+    const payload = {
+      schema: PL_EXPORT_SCHEMA, version: 1, kind: "video",
+      exported_at: new Date().toISOString(), visuals_included: includeVisuals,
+      videos: [_exportVideo(dsDetailVideo, includeVisuals)],
+    };
+    _downloadJson(payload, `physicslens_${dsDetailVideo.name.replace(/[^\w.-]+/g, "_")}_${ts}.json`);
+    return;
+  }
+  if (!dsVideos.length) { alert("No videos loaded — nothing to export."); return; }
+  const payload = {
+    schema: PL_EXPORT_SCHEMA, version: 1, kind: "batch",
+    exported_at: new Date().toISOString(), visuals_included: includeVisuals,
+    batch_config: exportBatchConfig(),
+    videos: dsVideos.map(v => _exportVideo(v, includeVisuals)),
+  };
+  _downloadJson(payload, `physicslens_batch_${dsVideos.length}videos_${ts}.json`);
+}
+
+async function importDsFile(file) {
+  let data;
+  try { data = JSON.parse(await file.text()); }
+  catch { alert("Could not parse that file as JSON."); return; }
+  if (!data || data.schema !== PL_EXPORT_SCHEMA || !Array.isArray(data.videos)) {
+    alert("That doesn't look like a PhysicsLENS export file (missing/unrecognized schema)."); return;
+  }
+  data.videos.forEach(vExp => {
+    const id = "imported-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    const runs = (vExp.runs || []).map((r, i) => ({
+      id: r.id || `${id}-r${i}`, stageId: r.stageId, stageName: r.stageName, stageNum: r.stageNum,
+      pipelineId: r.pipelineId, pipelineName: r.pipelineName,
+      timestamp: r.timestamp, status: r.status || "done",
+      durationMs: r.durationMs ?? null,
+      gpuMb: r.gpuMb ?? null,
+      routedFrom: r.routedFrom || null,
+      metrics: r.metrics || [], severities: r.severities || [],
+      logs: r.logs || [], comment: r.comment || "", excluded: !!r.excluded,
+      settings: r.settings || {},
+      results: r.results || [], llmSummaries: r.llmSummaries || [],
+      images: r.images || [], plots: r.plots || [],
+      videos: r.videos || [], markerVideos: r.markerVideos || [],
+    }));
+    dsVideos.push({
+      id, name: vExp.name || "imported video", status: vExp.status || "done",
+      runs, maxSev: vExp.maxSev ?? null, previewAvailable: false,
+    });
+  });
+  // Restore the batch config (tool selection + per-tool overrides + routing) so
+  // an imported batch can be re-run with the same settings it was saved with.
+  let cfgRestored = false;
+  const bc = data.batch_config;
+  if (bc && typeof bc === "object") {
+    if (bc.settings && typeof bc.settings === "object") batchSettings = { ...bc.settings };
+    if (Array.isArray(bc.selected)) dsSelected = new Set(bc.selected);
+    refreshDsPipeList();
+    updateBatchSettingsBadge();
+    cfgRestored = true;
+  }
+  setMode("dataset");
+  renderDsGrid();
+  updateDsRunBtn();
+  const n = data.videos.length;
+  alert(`Imported ${n} video${n === 1 ? "" : "s"}`
+       + (data.visuals_included ? "" : " (numeric-only export — no saved images/plots)")
+       + (cfgRestored ? " and its batch settings" : "")
+       + `. Video preview isn't available for imported entries (only the original upload has the file).`);
+}
+
+// ── Cross-video benchmark table (built fresh from current dsVideos each open) ──
+function openBenchmark() {
+  const wrap = document.getElementById("benchmarkWrap");
+  const empty = document.getElementById("benchmarkEmpty");
+  if (!dsVideos.length) {
+    empty.style.display = "flex"; wrap.style.display = "none";
+  } else {
+    empty.style.display = "none"; wrap.style.display = "block";
+    renderBenchmarkTable();
+  }
+  document.getElementById("benchmarkModal").classList.add("show");
+}
+
+function _escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+let benchMode = "severity";   // "severity" | "duration"
+
+// The latest non-excluded run per (video, pipeline). Shared by both modes.
+function _latestByPipe(v) {
+  const byPipe = {};
+  (v.runs || []).forEach(r => {
+    if (r.excluded) return;
+    const prev = byPipe[r.pipelineId];
+    if (!prev || r.timestamp >= prev.timestamp) byPipe[r.pipelineId] = r;
+  });
+  return byPipe;
+}
+
+function renderBenchmarkTable() {
+  document.getElementById("benchmarkTitle").textContent =
+    benchMode === "duration" ? "Benchmark — Run Time by Stage / Tool (server-measured)"
+    : benchMode === "gpu"    ? "Benchmark — Peak GPU Memory by Stage / Tool (server-measured)"
+                             : "Benchmark — Severity by Video × Pipeline";
+  const table = document.getElementById("benchmarkTable");
+  const td = "padding:6px 10px";
+
+  // Pipeline columns present across all loaded videos, with their stage.
+  const pipeMeta = new Map();   // pid -> {name, stageId}
+  dsVideos.forEach(v => (v.runs || []).forEach(r => {
+    if (!r.excluded) pipeMeta.set(r.pipelineId, { name: r.pipelineName || r.pipelineId, stageId: r.stageId });
+  }));
+  // Group + order pipelines by STAGES order (unknown stages bucket last).
+  const groups = STAGES.map(st => ({
+    stage: st,
+    pipes: [...pipeMeta.entries()].filter(([, m]) => m.stageId === st.id),
+  })).filter(g => g.pipes.length);
+  const orphan = [...pipeMeta.entries()].filter(([, m]) => !STAGES.some(s => s.id === m.stageId));
+  if (orphan.length) groups.push({ stage: { name: "Other", color: "#888", num: "" }, pipes: orphan });
+
+  if (benchMode === "severity") {
+    const cols = groups.flatMap(g => g.pipes);
+    const thead = `<thead>
+      <tr>
+        <th rowspan="2" style="${td};text-align:left;border-bottom:2px solid var(--border);position:sticky;left:0;background:var(--surface)">Video</th>
+        ${groups.map(g => `<th colspan="${g.pipes.length}" style="${td};text-align:center;border-bottom:1px solid var(--border);color:#fff;background:${g.stage.color}">${_escHtml(g.stage.name)}</th>`).join("")}
+      </tr>
+      <tr>${cols.map(([, m]) => `<th style="${td};border-bottom:2px solid var(--border);font-weight:500">${_escHtml(m.name)}</th>`).join("")}</tr>
+    </thead>`;
+    const rows = dsVideos.map(v => {
+      const byPipe = _latestByPipe(v);
+      const cells = cols.map(([pid]) => {
+        const r = byPipe[pid];
+        if (!r) return `<td style="${td};text-align:center;color:var(--muted)">—</td>`;
+        const sev = Math.max(0, ...(r.severities || []).map(s => +s.value || 0), 0);
+        const err = r.status === "error";
+        return `<td style="${td};text-align:center;cursor:pointer" title="Latest run · click to open report">
+          <span style="display:inline-block;min-width:38px;padding:2px 6px;border-radius:4px;font-weight:600;color:#fff;background:${err ? "#777" : sevColorFor(sev)}">${err ? "ERR" : Math.round(sev) + "%"}</span>
+        </td>`;
+      }).join("");
+      return `<tr class="bm-row" data-vid="${_escHtml(v.id)}" style="border-bottom:1px solid var(--border)">
+        <td style="${td};font-weight:500;position:sticky;left:0;background:var(--surface)">${_escHtml(v.name)}</td>${cells}
+      </tr>`;
+    }).join("");
+    table.innerHTML = thead + `<tbody>${rows}</tbody>`;
+  } else {
+    // Numeric mode: Run time (sum) or GPU peak (high-water max). Same layout —
+    // per-tool cells + a stage subtotal + a grand total, plus a footer
+    // aggregating each column across all videos. `comb` picks sum vs max.
+    const isGpu  = benchMode === "gpu";
+    const valOf  = r => { const x = isGpu ? (r ? r.gpuMb : null) : (r ? r.durationMs : null);
+                          return (x != null && isFinite(x)) ? x : null; };
+    const fmtV   = isGpu ? fmtGpu : fmtDur;
+    const comb   = isGpu ? Math.max : ((a, b) => a + b);          // GPU peak vs summed time
+    const merge  = (acc, v) => v == null ? acc : (acc == null ? v : comb(acc, v));
+    const aggSym = isGpu ? "▲" : "Σ";                              // high-water vs sum
+    const thead = `<thead>
+      <tr>
+        <th rowspan="2" style="${td};text-align:left;border-bottom:2px solid var(--border);position:sticky;left:0;background:var(--surface)">Video</th>
+        ${groups.map(g => `<th colspan="${g.pipes.length + 1}" style="${td};text-align:center;border-bottom:1px solid var(--border);color:#fff;background:${g.stage.color}">${_escHtml(g.stage.name)}</th>`).join("")}
+        <th rowspan="2" style="${td};text-align:center;border-bottom:2px solid var(--border);background:var(--surface)">${isGpu ? "Peak" : "Total"}</th>
+      </tr>
+      <tr>
+        ${groups.map(g => g.pipes.map(([, m]) => `<th style="${td};border-bottom:2px solid var(--border);font-weight:500">${_escHtml(m.name)}</th>`).join("") + `<th style="${td};border-bottom:2px solid var(--border);font-weight:600;color:${g.stage.color}">${aggSym} ${g.stage.num || ""}</th>`).join("")}
+      </tr>
+    </thead>`;
+    const colTotals = {};   // pid -> aggregated value across videos
+    let grandColTotal = null;
+    const rows = dsVideos.map(v => {
+      const byPipe = _latestByPipe(v);
+      let vidTotal = null;
+      const cellHtml = groups.map(g => {
+        let stageTotal = null;
+        const pipeCells = g.pipes.map(([pid]) => {
+          const val = valOf(byPipe[pid]);
+          if (val != null) {
+            stageTotal = merge(stageTotal, val);
+            colTotals[pid] = merge(colTotals[pid] ?? null, val);
+          }
+          return `<td style="${td};text-align:center;color:${val == null ? "var(--muted)" : "var(--text)"}">${val == null ? "—" : fmtV(val)}</td>`;
+        }).join("");
+        vidTotal = merge(vidTotal, stageTotal);
+        return pipeCells + `<td style="${td};text-align:center;font-weight:600;color:${g.stage.color}">${stageTotal == null ? "—" : fmtV(stageTotal)}</td>`;
+      }).join("");
+      grandColTotal = merge(grandColTotal, vidTotal);
+      return `<tr class="bm-row" data-vid="${_escHtml(v.id)}" style="border-bottom:1px solid var(--border)">
+        <td style="${td};font-weight:500;position:sticky;left:0;background:var(--surface)">${_escHtml(v.name)}</td>
+        ${cellHtml}
+        <td style="${td};text-align:center;font-weight:700">${vidTotal == null ? "—" : fmtV(vidTotal)}</td>
+      </tr>`;
+    }).join("");
+    // Footer: aggregate per tool + per stage across the whole dataset.
+    const footCells = groups.map(g => {
+      let stageSum = null;
+      const pipeF = g.pipes.map(([pid]) => {
+        const t = colTotals[pid] ?? null;
+        stageSum = merge(stageSum, t);
+        return `<td style="${td};text-align:center;font-weight:600">${t == null ? "—" : fmtV(t)}</td>`;
+      }).join("");
+      return pipeF + `<td style="${td};text-align:center;font-weight:700;color:${g.stage.color}">${stageSum == null ? "—" : fmtV(stageSum)}</td>`;
+    }).join("");
+    const tfoot = `<tfoot><tr style="border-top:2px solid var(--border);background:var(--bg)">
+      <td style="${td};font-weight:700;position:sticky;left:0;background:var(--bg)">All videos ${aggSym}</td>
+      ${footCells}
+      <td style="${td};text-align:center;font-weight:800">${grandColTotal == null ? "—" : fmtV(grandColTotal)}</td>
+    </tr></tfoot>`;
+    table.innerHTML = thead + `<tbody>${rows}</tbody>` + tfoot;
+  }
+
+  table.querySelectorAll(".bm-row").forEach(tr => {
+    tr.addEventListener("click", () => {
+      const v = dsVideos.find(x => x.id === tr.dataset.vid);
+      if (!v) return;
+      document.getElementById("benchmarkModal").classList.remove("show");
+      openVideoReport(v);
+    });
+  });
+}
+
+document.getElementById("dsExportBtn").addEventListener("click", exportDsData);
+document.getElementById("dsImportBtn").addEventListener("click", () => document.getElementById("dsImportFile").click());
+document.getElementById("dsImportFile").addEventListener("change", (e) => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (file) importDsFile(file);
+});
+// Batch API keys (session-only; kept in the batchKeys object, never persisted).
+document.getElementById("batchOpenaiKey").addEventListener("input", e => {
+  batchKeys.openai = e.target.value.trim(); updateBatchKeyStatus();
+});
+document.getElementById("batchOpenrouterKey").addEventListener("input", e => {
+  batchKeys.openrouter = e.target.value.trim(); updateBatchKeyStatus();
+});
+updateBatchKeyStatus();
+
+document.getElementById("dsBenchmarkBtn").addEventListener("click", openBenchmark);
+document.querySelectorAll(".bm-mode").forEach(b => b.addEventListener("click", () => {
+  benchMode = b.dataset.mode;
+  document.querySelectorAll(".bm-mode").forEach(x => x.classList.toggle("active", x === b));
+  if (dsVideos.length) renderBenchmarkTable();
+}));
+document.getElementById("benchmarkModalClose").addEventListener("click", () => document.getElementById("benchmarkModal").classList.remove("show"));
+document.getElementById("benchmarkModal").addEventListener("click", e => { if (e.target.id === "benchmarkModal") document.getElementById("benchmarkModal").classList.remove("show"); });
+
+// ── Per-video report modal (reuses populateEntryDetail / renderMarkerVideo) ─────
+function openVideoReport(v) {
+  dsDetailVideo = v;
+  setMode("ds-detail");
+  document.getElementById("dsCrumb").textContent = "› " + v.name;
+
+  // Load video into the detail player. Imported (not freshly uploaded/run)
+  // videos have no server-side file behind their id — skip src so the
+  // <video> just stays empty instead of 404ing, and label the header.
+  const vid = document.getElementById("dsDetailVid");
+  if (v.previewAvailable === false) {
+    vid.removeAttribute("src"); vid.load();
+  } else {
+    vid.src = `${API}/dataset/file/${v.id}`;
+  }
+  document.getElementById("dsDetailName").textContent =
+    v.name + (v.previewAvailable === false ? "  (imported — no video preview)" : "");
+  // Wire controls for the detail player
+  const btnPlay = document.getElementById("dsBtnPlay");
+  const scrub   = document.getElementById("dsVidScrub");
+  const timeEl  = document.getElementById("dsVidTime");
+  const speedEl = document.getElementById("dsVidSpeed");
+  vid.onloadedmetadata = () => { scrub.max = vid.duration; timeEl.textContent = `0:00 / ${fmt(vid.duration)}`; };
+  vid.ontimeupdate = () => { scrub.value = vid.currentTime; timeEl.textContent = `${fmt(vid.currentTime)} / ${fmt(vid.duration)}`; };
+  vid.onended = () => { btnPlay.textContent = "▶"; };
+  btnPlay.onclick  = () => { if (vid.paused) { vid.play(); btnPlay.textContent = "⏸"; } else { vid.pause(); btnPlay.textContent = "▶"; } };
+  scrub.oninput    = () => { vid.currentTime = scrub.value; };
+  speedEl.onchange = () => { vid.playbackRate = parseFloat(speedEl.value); };
+
+  // Mark stages that have run results so the dot appears on the tab
+  STAGES.forEach(stage => {
+    const tab = document.querySelector(`.stage-tab[data-stage-id="${stage.id}"]`);
+    if (tab) tab.classList.toggle("has-results", v.runs.some(e => e.stageId === stage.id));
+  });
+
+  // Open the first stage that has results (so the report shows straight away);
+  // selectStage then auto-selects the first completed test within it.
+  const firstStage = STAGES.find(s => (v.runs || []).some(e => e.stageId === s.id)) || STAGES[0];
+  selectStage(firstStage);
+  updateRunBtn();
+}
+
+loadPipelines();
+</script>
+</body>
+</html>

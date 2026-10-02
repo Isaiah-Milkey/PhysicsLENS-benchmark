@@ -1,0 +1,444 @@
+{
+  "protocol": "multi-frame (8 frames, temporal order)",
+  "models": {
+    "Qwen/Qwen2.5-VL-7B-Instruct": {
+      "rows": [
+        {
+          "label": "ai",
+          "video": "basketball-explosion.mp4",
+          "score": 0.2,
+          "logprob_score": 0.5,
+          "failure": "fire effect",
+          "explanation": "The fire effect on the basketball is not realistic and does not follow physical laws."
+        },
+        {
+          "label": "ai",
+          "video": "petri-dish-pandas.mp4",
+          "score": 0.5,
+          "logprob_score": 0.5,
+          "failure": "Objects appear and disappear unexpectedly",
+          "explanation": "The red panda figurines appear and disappear without any apparent cause, which is not consistent with real-world physics."
+        },
+        {
+          "label": "ai",
+          "video": "ships-in-coffee.mp4",
+          "score": 0.2,
+          "logprob_score": 0.4688,
+          "failure": "The ships appear to be floating on a liquid surface, which is not typical for real-world physics.",
+          "explanation": "The ships are positioned in a way that suggests they are floating on a liquid surface, which defies the expected behavior of ships in real-world scenarios."
+        },
+        {
+          "label": "ai",
+          "video": "beer_pouring.mp4",
+          "score": 0.2,
+          "logprob_score": 0.0954,
+          "failure": "Foam Overflow",
+          "explanation": "The foam appears to be overflowing the glass, which is not typical for a realistic pouring scenario."
+        },
+        {
+          "label": "ai",
+          "video": "tidal_wave.mp4",
+          "score": 0.2,
+          "logprob_score": 0.2942,
+          "failure": "wave deformation",
+          "explanation": "The waves appear to be deforming unrealistically as they interact with each other, which is not typical of real-world wave dynamics."
+        },
+        {
+          "label": "real",
+          "video": "balls-collide.mp4",
+          "score": 0.0,
+          "logprob_score": 0.0954,
+          "failure": null,
+          "explanation": "The balls remain stationary on the table, indicating no motion or interaction."
+        },
+        {
+          "label": "real",
+          "video": "ball-ramp.mp4",
+          "score": 0.0,
+          "logprob_score": 0.133,
+          "failure": null,
+          "explanation": "The video shows a ball rolling off a ramp and moving across a flat surface. The motion of the ball is consistent with gravity and momentum, and there are no signs of implausible interactions."
+        },
+        {
+          "label": "real",
+          "video": "ball-and-block-fall.mp4",
+          "score": 0.0,
+          "logprob_score": 0.0373,
+          "failure": null,
+          "explanation": "The frames depict a static scene with no visible motion or interaction between objects."
+        },
+        {
+          "label": "real",
+          "video": "block-domino.mp4",
+          "score": 0.0,
+          "logprob_score": 0.2451,
+          "failure": null,
+          "explanation": "The blocks are shown to be in motion due to an external force, likely a hand or a tool, which is not visible in the frame. The blocks fall over and come to rest on the table, which is consistent with gravity and the laws of motion."
+        },
+        {
+          "label": "real",
+          "video": "bouncing_ball.webm",
+          "score": 0.2,
+          "logprob_score": 0.2942,
+          "failure": "The ball appears to be floating without any visible support.",
+          "explanation": "The ball is shown suspended in mid-air, which defies gravity unless it's supported by an unseen force or magnetic field, neither of which are evident in the image."
+        }
+      ],
+      "summary": {
+        "ai_mean": 0.26,
+        "real_mean": 0.04,
+        "auc": 0.92,
+        "n_parsed": 10,
+        "logprob_auc": 0.84,
+        "logprob_ai_mean": 0.372,
+        "logprob_real_mean": 0.161
+      }
+    },
+    "OpenGVLab/InternVL3-8B-hf": {
+      "rows": [
+        {
+          "label": "ai",
+          "video": "basketball-explosion.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The motion and interactions in the frames appear to obey real-world physics, with the basketball moving under the influence of gravity and the hoop remaining intact."
+        },
+        {
+          "label": "ai",
+          "video": "petri-dish-pandas.mp4",
+          "score": 0.8,
+          "failure": "object permanence and fluid behavior",
+          "explanation": "The pandas appear to be floating and moving unnaturally in the liquid, which is inconsistent with real-world physics. Additionally, the sudden appearance and disappearance of objects suggest implausible behavior."
+        },
+        {
+          "label": "ai",
+          "video": "ships-in-coffee.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The ships move and interact with the liquid and each other in a manner consistent with real-world physics, showing no implausible deformations or sudden, unexplained movements."
+        },
+        {
+          "label": "ai",
+          "video": "beer_pouring.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The video shows a realistic pouring of liquid into a glass, with consistent fluid behavior and gravity effects."
+        },
+        {
+          "label": "ai",
+          "video": "tidal_wave.mp4",
+          "score": 0.1,
+          "failure": null,
+          "explanation": "The waves and rocks appear to move and interact naturally, with consistent fluid behavior and gravity effects."
+        },
+        {
+          "label": "real",
+          "video": "balls-collide.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The motion and interactions of the balls and weights appear consistent with real-world physics, showing no implausible deformations or movements."
+        },
+        {
+          "label": "real",
+          "video": "ball-ramp.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The motion of the tennis ball is consistent with gravity and momentum, and the ball's disappearance and reappearance are plausible within the context of the video."
+        },
+        {
+          "label": "real",
+          "video": "ball-and-block-fall.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The video shows a tennis ball and a small red object on a couch, with a tennis racket and a clamp overhead. The ball and object remain stationary, and there are no implausible movements or deformations."
+        },
+        {
+          "label": "real",
+          "video": "block-domino.mp4",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The blocks fall in a realistic manner, obeying gravity and momentum. No objects appear or disappear implausibly."
+        },
+        {
+          "label": "real",
+          "video": "bouncing_ball.webm",
+          "score": 0.0,
+          "failure": null,
+          "explanation": "The video shows a charged polythene ball being repelled by a charged sphere, which is consistent with electrostatic interactions. The ball's movement and interactions with the sphere obey real-world physics."
+        }
+      ],
+      "summary": {
+        "ai_mean": 0.18,
+        "real_mean": 0.0,
+        "auc": 0.7,
+        "n_parsed": 10
+      }
+    },
+    "HuggingFaceTB/SmolVLM2-2.2B-Instruct": {
+      "rows": [
+        {
+          "label": "ai",
+          "video": "basketball-explosion.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "ai",
+          "video": "petri-dish-pandas.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "ai",
+          "video": "ships-in-coffee.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "ai",
+          "video": "beer_pouring.mp4",
+          "score": null,
+          "failure": null,
+          "explanation": "unparseable:  The image is a video with the following description:"
+        },
+        {
+          "label": "ai",
+          "video": "tidal_wave.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "real",
+          "video": "balls-collide.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "real",
+          "video": "ball-ramp.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "real",
+          "video": "ball-and-block-fall.mp4",
+          "score": null,
+          "failure": null,
+          "explanation": "badjson:  {\"suspicion_score\": 0.0, \"suspected_failure\": \"none\", \"explanation\": \"the motion and interactions b"
+        },
+        {
+          "label": "real",
+          "video": "block-domino.mp4",
+          "score": 0.0,
+          "failure": "none",
+          "explanation": "the motion and interactions across frames obey real-world physics"
+        },
+        {
+          "label": "real",
+          "video": "bouncing_ball.webm",
+          "score": 0.0,
+          "failure": "When the ball touches the charging sphere, it will become charged and be repelled away from the sphere.",
+          "explanation": "If the ball is allowed to discharge (touching an earthed surface or leaking charges to the air) it will be attracted once to the sphere, to be recharged"
+        }
+      ],
+      "summary": {
+        "ai_mean": 0.0,
+        "real_mean": 0.0,
+        "auc": 0.5,
+        "n_parsed": 8
+      }
+    },
+    "OpenGVLab/InternVL3-14B-hf": {
+      "rows": [
+        {
+          "label": "ai",
+          "video": "basketball-explosion.mp4",
+          "score": 0.9,
+          "logprob_score": 0.7549,
+          "failure": "fire effect",
+          "explanation": "The basketball's motion and interactions with the hoop appear normal, but the sudden appearance of flames is implausible and suggests AI manipulation."
+        },
+        {
+          "label": "ai",
+          "video": "petri-dish-pandas.mp4",
+          "score": 0.9,
+          "logprob_score": 0.9992,
+          "failure": "object movement without force",
+          "explanation": "The red panda figures appear to move and float without any visible force acting upon them, violating real-world physics."
+        },
+        {
+          "label": "ai",
+          "video": "ships-in-coffee.mp4",
+          "score": 0.8,
+          "logprob_score": 0.9399,
+          "failure": "fluid and rigid-body behavior",
+          "explanation": "The ships appear to float and move without realistic fluid interaction, and the foam behaves unnaturally, suggesting AI generation."
+        },
+        {
+          "label": "ai",
+          "video": "beer_pouring.mp4",
+          "score": 0.2,
+          "logprob_score": 0.0141,
+          "failure": "fluid behavior",
+          "explanation": "The liquid's flow and foam formation appear slightly inconsistent with real-world physics, possibly indicating an AI-generated effect."
+        },
+        {
+          "label": "ai",
+          "video": "tidal_wave.mp4",
+          "score": 0.8,
+          "logprob_score": 0.7982,
+          "failure": "fluid behavior",
+          "explanation": "The wave's motion and deformation appear exaggerated and unrealistic, suggesting AI manipulation."
+        },
+        {
+          "label": "real",
+          "video": "balls-collide.mp4",
+          "score": 0.8,
+          "logprob_score": 0.2689,
+          "failure": "object movement",
+          "explanation": "The blue and yellow balls appear to move without any visible force acting upon them, which is inconsistent with real-world physics."
+        },
+        {
+          "label": "real",
+          "video": "ball-ramp.mp4",
+          "score": 0.8,
+          "logprob_score": 0.5927,
+          "failure": "object disappearance",
+          "explanation": "The tennis ball appears and then disappears without a plausible explanation, violating object permanence."
+        },
+        {
+          "label": "real",
+          "video": "ball-and-block-fall.mp4",
+          "score": 0.8,
+          "logprob_score": 0.3775,
+          "failure": "object disappearance",
+          "explanation": "The red object appears to disappear and reappear without plausible cause, violating object permanence."
+        },
+        {
+          "label": "real",
+          "video": "block-domino.mp4",
+          "score": 0.8,
+          "logprob_score": 0.7549,
+          "failure": "implausible motion",
+          "explanation": "The blocks fall and scatter in an unrealistic manner, with some blocks appearing to move without clear contact with others or the surface."
+        },
+        {
+          "label": "real",
+          "video": "bouncing_ball.webm",
+          "score": 0.8,
+          "logprob_score": 0.0954,
+          "failure": "lighting and object behavior",
+          "explanation": "The video transitions to a very dark frame, making it difficult to observe interactions. The earlier frames show a charged object repelling another, which is plausible, but the abrupt darkness suggests a possible failure in capturing real-world physics."
+        }
+      ],
+      "summary": {
+        "ai_mean": 0.72,
+        "real_mean": 0.8,
+        "auc": 0.6,
+        "n_parsed": 10,
+        "logprob_auc": 0.78,
+        "logprob_ai_mean": 0.701,
+        "logprob_real_mean": 0.418
+      }
+    },
+    "Qwen/Qwen2.5-VL-32B-Instruct": {
+      "rows": [
+        {
+          "label": "ai",
+          "video": "basketball-explosion.mp4",
+          "score": 0.9,
+          "logprob_score": 0.4074,
+          "failure": "motion_without_force",
+          "explanation": "The basketball appears to defy gravity as it hovers near the hoop without any visible force acting upon it, which is inconsistent with real-world physics."
+        },
+        {
+          "label": "ai",
+          "video": "petri-dish-pandas.mp4",
+          "score": 0.7,
+          "logprob_score": 0.3776,
+          "failure": "Object Permanence",
+          "explanation": "The red panda-like figures appear and disappear around the petri dish and laboratory equipment without any visible cause or interaction with other objects, violating the principle of object permanence."
+        },
+        {
+          "label": "ai",
+          "video": "ships-in-coffee.mp4",
+          "score": 0.7,
+          "logprob_score": 0.4074,
+          "failure": "Morphing Objects",
+          "explanation": "The ships appear to be morphing and changing shape inconsistently between frames, which defies real-world physics. The transitions suggest digital manipulation rather than natural movement."
+        },
+        {
+          "label": "ai",
+          "video": "beer_pouring.mp4",
+          "score": 0.2,
+          "logprob_score": 0.011,
+          "failure": null,
+          "explanation": "The sequence of frames shows a liquid being poured into a glass, which is consistent with real-world physics. The liquid flows smoothly, forming a stream and creating foam at the top, which is typical behavior for pouring beverages like beer. There are no visible anomalies such as abrupt changes in flow direction or unrealistic interactions."
+        },
+        {
+          "label": "ai",
+          "video": "tidal_wave.mp4",
+          "score": 0.7,
+          "logprob_score": 0.0851,
+          "failure": "Fluid Behavior",
+          "explanation": "The wave's motion appears to defy realistic fluid dynamics, as it maintains an unnaturally perfect and consistent shape throughout the sequence. Real waves typically exhibit more chaotic and dissipative behavior due to gravity and friction."
+        },
+        {
+          "label": "real",
+          "video": "balls-collide.mp4",
+          "score": 0.9,
+          "logprob_score": 0.2451,
+          "failure": "Object Appearance/Disappearance",
+          "explanation": "The blue ball appears suddenly on the table in frame 4, which violates the principle of object permanence as it seems to materialize out of nowhere without any visible cause or force acting upon it."
+        },
+        {
+          "label": "real",
+          "video": "ball-ramp.mp4",
+          "score": 0.7,
+          "logprob_score": 0.3776,
+          "failure": "Object Permanence",
+          "explanation": "The tennis ball appears and disappears between frames without any visible interaction or force causing its movement, violating the principle of object permanence."
+        },
+        {
+          "label": "real",
+          "video": "ball-and-block-fall.mp4",
+          "score": 0.2,
+          "logprob_score": 0.3209,
+          "failure": "object movement without force",
+          "explanation": "The ball appears to be floating above the surface without any visible support or force acting upon it, which defies gravity and real-world physics."
+        },
+        {
+          "label": "real",
+          "video": "block-domino.mp4",
+          "score": 0.7,
+          "logprob_score": 0.2943,
+          "failure": "object_disappearance",
+          "explanation": "The sequence shows a wooden stick interacting with colored blocks, causing them to fall over. However, as the blocks fall, they seem to disappear partially or completely, which violates the principle of object permanence. This suggests an issue with how the objects are rendered or tracked in the video."
+        },
+        {
+          "label": "real",
+          "video": "bouncing_ball.webm",
+          "score": 0.2,
+          "logprob_score": 0.018,
+          "failure": null,
+          "explanation": "The sequence of events depicted follows real-world physics principles. The ball is suspended by a non-conducting thread, charged upon contact with the sphere, repelled due to like charges, and then attracted back after discharging. This behavior aligns with electrostatic principles."
+        }
+      ],
+      "summary": {
+        "ai_mean": 0.64,
+        "real_mean": 0.54,
+        "auc": 0.58,
+        "n_parsed": 10,
+        "logprob_auc": 0.62,
+        "logprob_ai_mean": 0.258,
+        "logprob_real_mean": 0.251
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Environment / secrets
+.env
+.env.*
+
+# Temp video files (written by backend during pipeline runs)
+# *.mp4
+# *.mov
+# *.avi
+# *.tmp
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+docs/
+
+# Eval harness artifacts (staged clips + per-run reports; regenerate, don't commit)
+data/
+eval_reports/
+
+# Raw dataset drops — large, and re-derivable from the staged copy
+*.zip
+
+# Paper source lives outside this repo; backend/scripts/paper_tables.py
+# and main_table_full.py still regenerate paper/tables/
+# and paper/fig/ locally when pointed at a local paper/ checkout — keep all
+# of it out of version control here.
+paper/
+
+# Local smoke-test clips (third-party media, not distributed)
+test_videos/
+

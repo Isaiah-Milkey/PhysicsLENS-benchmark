@@ -1,0 +1,365 @@
+{
+ "model": "internvl3-8b",
+ "frames": 8,
+ "order": "temporal",
+ "n": 119,
+ "scores": {
+  "wan__unobs__007": {
+   "hidden_sig": 2.2318206259349975
+  },
+  "wan__unobs__009": {
+   "hidden_sig": 2.5
+  },
+  "wan__unobs__010": {
+   "hidden_sig": 2.7541276064325606
+  },
+  "wan__unobs__011": {
+   "hidden_sig": 2.252490303483724
+  },
+  "wan__unobs__012": {
+   "hidden_sig": 2.2746075886724273
+  },
+  "wan__unobs__016": {
+   "hidden_sig": 2.924446975989632
+  },
+  "wan__unobs__019": {
+   "hidden_sig": 2.3976600064602342
+  },
+  "wan__unobs__022": {
+   "hidden_sig": 2.1403426081951684
+  },
+  "wan__unobs__025": {
+   "hidden_sig": 2.5734892540278804
+  },
+  "wan__unobs__027": {
+   "hidden_sig": 2.4886485541030896
+  },
+  "wan__unobs__028": {
+   "hidden_sig": 1.9945528174025942
+  },
+  "wan__unobs__029": {
+   "hidden_sig": 2.9333843097879297
+  },
+  "wan__unobs__030": {
+   "hidden_sig": 2.8268750690242324
+  },
+  "wan__unobs__032": {
+   "hidden_sig": 2.868841549426574
+  },
+  "wan__unobs__034": {
+   "hidden_sig": 2.579856375870849
+  },
+  "wan__unobs__050": {
+   "hidden_sig": 1.8461307537615708
+  },
+  "wan__unobs__060": {
+   "hidden_sig": 2.593143635920855
+  },
+  "wan__unobs__062": {
+   "hidden_sig": 2.866684128700195
+  },
+  "wan__unobs__063": {
+   "hidden_sig": 1.99576335159894
+  },
+  "wan__unobs__066": {
+   "hidden_sig": 2.610481360618908
+  },
+  "wan__unobs__068": {
+   "hidden_sig": 2.2338206968128422
+  },
+  "wan__unobs__070": {
+   "hidden_sig": 2.0445872578833484
+  },
+  "wan__unobs__071": {
+   "hidden_sig": 2.5930546504661254
+  },
+  "wan__unobs__073": {
+   "hidden_sig": 2.2129003675291625
+  },
+  "wan__unobs__074": {
+   "hidden_sig": 2.501569187501032
+  },
+  "wan__unobs__077": {
+   "hidden_sig": 1.8107068716014028
+  },
+  "wan__unobs__078": {
+   "hidden_sig": 2.2590961535506433
+  },
+  "wan__unobs__080": {
+   "hidden_sig": 2.832214996733585
+  },
+  "wan__unobs__084": {
+   "hidden_sig": 1.8630569768620613
+  },
+  "wan__unobs__085": {
+   "hidden_sig": 2.338975784975312
+  },
+  "cosmos__unobs__007": {
+   "hidden_sig": 2.347603874142404
+  },
+  "cosmos__unobs__009": {
+   "hidden_sig": 2.5569379457316783
+  },
+  "cosmos__unobs__010": {
+   "hidden_sig": 2.4322014104156198
+  },
+  "cosmos__unobs__011": {
+   "hidden_sig": 2.359980029749173
+  },
+  "cosmos__unobs__012": {
+   "hidden_sig": 2.30352335704801
+  },
+  "cosmos__unobs__016": {
+   "hidden_sig": 2.722222899093376
+  },
+  "cosmos__unobs__019": {
+   "hidden_sig": 2.445479026904024
+  },
+  "cosmos__unobs__022": {
+   "hidden_sig": 2.192904857285166
+  },
+  "cosmos__unobs__025": {
+   "hidden_sig": 2.748567958637762
+  },
+  "cosmos__unobs__027": {
+   "hidden_sig": 2.4820678225131343
+  },
+  "cosmos__unobs__028": {
+   "hidden_sig": 1.9452162732945046
+  },
+  "cosmos__unobs__029": {
+   "hidden_sig": 2.8859800482452544
+  },
+  "cosmos__unobs__030": {
+   "hidden_sig": 2.8268750716049107
+  },
+  "cosmos__unobs__032": {
+   "hidden_sig": 2.9001897153575613
+  },
+  "cosmos__unobs__034": {
+   "hidden_sig": 2.558351837169996
+  },
+  "cosmos__unobs__050": {
+   "hidden_sig": 2.028639249480775
+  },
+  "cosmos__unobs__060": {
+   "hidden_sig": 2.43782349906388
+  },
+  "cosmos__unobs__062": {
+   "hidden_sig": 2.5515461440058025
+  },
+  "cosmos__unobs__063": {
+   "hidden_sig": 2.3546600039911803
+  },
+  "cosmos__unobs__066": {
+   "hidden_sig": 2.646301048356258
+  },
+  "cosmos__unobs__068": {
+   "hidden_sig": 2.3069260001671323
+  },
+  "cosmos__unobs__070": {
+   "hidden_sig": 2.2816811582782535
+  },
+  "cosmos__unobs__071": {
+   "hidden_sig": 2.5539091150526914
+  },
+  "cosmos__unobs__073": {
+   "hidden_sig": 2.3144568437590434
+  },
+  "cosmos__unobs__074": {
+   "hidden_sig": 2.5798563791736178
+  },
+  "cosmos__unobs__077": {
+   "hidden_sig": 2.6069035150604996
+  },
+  "cosmos__unobs__078": {
+   "hidden_sig": 2.4052471869605876
+  },
+  "cosmos__unobs__080": {
+   "hidden_sig": 2.9080509545303004
+  },
+  "cosmos__unobs__084": {
+   "hidden_sig": 2.3054311274773953
+  },
+  "cosmos__unobs__085": {
+   "hidden_sig": 2.559405016662814
+  },
+  "hunyuan__unobs__007": {
+   "hidden_sig": 2.314000992707109
+  },
+  "hunyuan__unobs__009": {
+   "hidden_sig": 2.6282339764480556
+  },
+  "hunyuan__unobs__010": {
+   "hidden_sig": 2.5292684457747563
+  },
+  "hunyuan__unobs__011": {
+   "hidden_sig": 2.17811106104169
+  },
+  "hunyuan__unobs__012": {
+   "hidden_sig": 2.324944474642538
+  },
+  "hunyuan__unobs__016": {
+   "hidden_sig": 2.6637965301646145
+  },
+  "hunyuan__unobs__019": {
+   "hidden_sig": 2.4221917235264887
+  },
+  "hunyuan__unobs__022": {
+   "hidden_sig": 2.2150865456127216
+  },
+  "hunyuan__unobs__025": {
+   "hidden_sig": 2.708484779651954
+  },
+  "hunyuan__unobs__027": {
+   "hidden_sig": 2.385952229219085
+  },
+  "hunyuan__unobs__028": {
+   "hidden_sig": 2.1491427683302122
+  },
+  "hunyuan__unobs__029": {
+   "hidden_sig": 2.9476947599744125
+  },
+  "hunyuan__unobs__030": {
+   "hidden_sig": 2.61299779443247
+  },
+  "hunyuan__unobs__034": {
+   "hidden_sig": 2.5621764882699303
+  },
+  "hunyuan__unobs__050": {
+   "hidden_sig": 1.8711109662659156
+  },
+  "hunyuan__unobs__060": {
+   "hidden_sig": 2.7598303908308046
+  },
+  "hunyuan__unobs__062": {
+   "hidden_sig": 2.4242508814770467
+  },
+  "hunyuan__unobs__063": {
+   "hidden_sig": 2.1902105543012604
+  },
+  "hunyuan__unobs__066": {
+   "hidden_sig": 2.8251496322097966
+  },
+  "hunyuan__unobs__068": {
+   "hidden_sig": 2.736070436056577
+  },
+  "hunyuan__unobs__070": {
+   "hidden_sig": 2.128546033665171
+  },
+  "hunyuan__unobs__071": {
+   "hidden_sig": 2.5566954320215327
+  },
+  "hunyuan__unobs__073": {
+   "hidden_sig": 2.2129003773850506
+  },
+  "hunyuan__unobs__074": {
+   "hidden_sig": 2.3957651530201716
+  },
+  "hunyuan__unobs__077": {
+   "hidden_sig": 1.9259691439887037
+  },
+  "hunyuan__unobs__078": {
+   "hidden_sig": 2.354856453018802
+  },
+  "hunyuan__unobs__080": {
+   "hidden_sig": 2.8922108951063787
+  },
+  "hunyuan__unobs__084": {
+   "hidden_sig": 1.9670386686894814
+  },
+  "hunyuan__unobs__085": {
+   "hidden_sig": 2.3281180106064387
+  },
+  "magi__unobs__007": {
+   "hidden_sig": 2.207754997628888
+  },
+  "magi__unobs__009": {
+   "hidden_sig": 2.5662996975521604
+  },
+  "magi__unobs__010": {
+   "hidden_sig": 2.375404769918931
+  },
+  "magi__unobs__011": {
+   "hidden_sig": 1.994552798974953
+  },
+  "magi__unobs__012": {
+   "hidden_sig": 2.0552589903352083
+  },
+  "magi__unobs__016": {
+   "hidden_sig": 2.4487646648237114
+  },
+  "magi__unobs__019": {
+   "hidden_sig": 2.145616090001594
+  },
+  "magi__unobs__022": {
+   "hidden_sig": 2.155626457975307
+  },
+  "magi__unobs__025": {
+   "hidden_sig": 2.5697741619770076
+  },
+  "magi__unobs__027": {
+   "hidden_sig": 2.4378235004611537
+  },
+  "magi__unobs__028": {
+   "hidden_sig": 1.8693161971119439
+  },
+  "magi__unobs__029": {
+   "hidden_sig": 2.9155385804072877
+  },
+  "magi__unobs__030": {
+   "hidden_sig": 2.517479703828225
+  },
+  "magi__unobs__032": {
+   "hidden_sig": 2.8209541155675586
+  },
+  "magi__unobs__034": {
+   "hidden_sig": 2.422359843610922
+  },
+  "magi__unobs__050": {
+   "hidden_sig": 1.6978430988864177
+  },
+  "magi__unobs__060": {
+   "hidden_sig": 2.4378234928200424
+  },
+  "magi__unobs__062": {
+   "hidden_sig": 2.3599800591549527
+  },
+  "magi__unobs__063": {
+   "hidden_sig": 2.0400371817973033
+  },
+  "magi__unobs__066": {
+   "hidden_sig": 2.372788360966228
+  },
+  "magi__unobs__068": {
+   "hidden_sig": 2.666947932348743
+  },
+  "magi__unobs__070": {
+   "hidden_sig": 1.9902877416858717
+  },
+  "magi__unobs__071": {
+   "hidden_sig": 2.511813523816029
+  },
+  "magi__unobs__073": {
+   "hidden_sig": 2.1906639793721694
+  },
+  "magi__unobs__074": {
+   "hidden_sig": 2.5
+  },
+  "magi__unobs__077": {
+   "hidden_sig": 1.7122012092948327
+  },
+  "magi__unobs__078": {
+   "hidden_sig": 2.2899392124253017
+  },
+  "magi__unobs__080": {
+   "hidden_sig": 2.6321024722954434
+  },
+  "magi__unobs__084": {
+   "hidden_sig": 1.675661763395973
+  },
+  "magi__unobs__085": {
+   "hidden_sig": 2.0077136575674133
+  }
+ }
+}

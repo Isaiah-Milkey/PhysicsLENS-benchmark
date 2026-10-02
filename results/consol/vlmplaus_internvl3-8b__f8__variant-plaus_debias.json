@@ -1,0 +1,1325 @@
+{
+ "model": "internvl3-8b",
+ "frames": 8,
+ "order": "temporal",
+ "n": 439,
+ "scores": {
+  "wan__obs__007": {
+   "plaus_debias": 2.6860111921386594
+  },
+  "wan__obs__008": {
+   "plaus_debias": 2.5751009906423383
+  },
+  "wan__obs__009": {
+   "plaus_debias": 2.6534446444510014
+  },
+  "wan__obs__010": {
+   "plaus_debias": 2.9031222368347507
+  },
+  "wan__obs__011": {
+   "plaus_debias": 2.8868628285502527
+  },
+  "wan__obs__012": {
+   "plaus_debias": 2.945799093203403
+  },
+  "wan__obs__014": {
+   "plaus_debias": 2.7553694763171683
+  },
+  "wan__obs__015": {
+   "plaus_debias": 2.8468501406337436
+  },
+  "wan__obs__016": {
+   "plaus_debias": 2.774391553905805
+  },
+  "wan__obs__017": {
+   "plaus_debias": 2.7081234189979067
+  },
+  "wan__obs__018": {
+   "plaus_debias": 3.0850842222541073
+  },
+  "wan__obs__019": {
+   "plaus_debias": 2.9731179324528303
+  },
+  "wan__obs__021": {
+   "plaus_debias": 2.8812366751246308
+  },
+  "wan__obs__022": {
+   "plaus_debias": 2.5
+  },
+  "wan__obs__025": {
+   "plaus_debias": 2.894960996669243
+  },
+  "wan__obs__026": {
+   "plaus_debias": 2.6366188479736223
+  },
+  "wan__obs__027": {
+   "plaus_debias": 2.928211982601062
+  },
+  "wan__obs__028": {
+   "plaus_debias": 2.928211991667382
+  },
+  "wan__obs__029": {
+   "plaus_debias": 2.9101109001401917
+  },
+  "wan__obs__030": {
+   "plaus_debias": 2.675674446928552
+  },
+  "wan__obs__031": {
+   "plaus_debias": 2.647950714696241
+  },
+  "wan__obs__032": {
+   "plaus_debias": 2.5723304753068903
+  },
+  "wan__obs__033": {
+   "plaus_debias": 2.601053151649025
+  },
+  "wan__obs__034": {
+   "plaus_debias": 2.6995345239153745
+  },
+  "wan__obs__035": {
+   "plaus_debias": 2.8000268453721584
+  },
+  "wan__obs__036": {
+   "plaus_debias": 2.7585837581528763
+  },
+  "wan__obs__039": {
+   "plaus_debias": 2.970682491259475
+  },
+  "wan__obs__041": {
+   "plaus_debias": 2.611222086231723
+  },
+  "wan__obs__042": {
+   "plaus_debias": 2.6055315851006284
+  },
+  "wan__obs__043": {
+   "plaus_debias": 2.5551820439177626
+  },
+  "wan__obs__044": {
+   "plaus_debias": 2.648806047024502
+  },
+  "wan__obs__045": {
+   "plaus_debias": 2.7310437744072993
+  },
+  "wan__obs__046": {
+   "plaus_debias": 2.655489505925547
+  },
+  "wan__obs__047": {
+   "plaus_debias": 2.7228768502107155
+  },
+  "wan__obs__048": {
+   "plaus_debias": 2.6701926759182375
+  },
+  "wan__obs__049": {
+   "plaus_debias": 2.7747231944808517
+  },
+  "wan__obs__050": {
+   "plaus_debias": 2.708177942191986
+  },
+  "wan__obs__051": {
+   "plaus_debias": 2.999868175443677
+  },
+  "wan__obs__052": {
+   "plaus_debias": 2.7585837586685837
+  },
+  "wan__obs__053": {
+   "plaus_debias": 2.6830930667869684
+  },
+  "wan__obs__054": {
+   "plaus_debias": 2.8172746356235256
+  },
+  "wan__obs__055": {
+   "plaus_debias": 2.7306188933243876
+  },
+  "wan__obs__056": {
+   "plaus_debias": 2.592405686920265
+  },
+  "wan__obs__057": {
+   "plaus_debias": 2.7081234034459816
+  },
+  "wan__obs__058": {
+   "plaus_debias": 2.627791400260598
+  },
+  "wan__obs__059": {
+   "plaus_debias": 2.7703232536003264
+  },
+  "wan__obs__060": {
+   "plaus_debias": 2.6805995125364657
+  },
+  "wan__obs__061": {
+   "plaus_debias": 2.7585837741824877
+  },
+  "wan__obs__062": {
+   "plaus_debias": 2.7985273471825494
+  },
+  "wan__obs__063": {
+   "plaus_debias": 2.7081234214916163
+  },
+  "wan__obs__064": {
+   "plaus_debias": 2.7430229846639342
+  },
+  "wan__obs__066": {
+   "plaus_debias": 2.8407920702589156
+  },
+  "wan__obs__067": {
+   "plaus_debias": 2.8075375965227587
+  },
+  "wan__obs__068": {
+   "plaus_debias": 2.8812366852932083
+  },
+  "wan__obs__070": {
+   "plaus_debias": 2.8566266426999887
+  },
+  "wan__obs__071": {
+   "plaus_debias": 2.770437222924873
+  },
+  "wan__obs__072": {
+   "plaus_debias": 2.9590753594008596
+  },
+  "wan__obs__073": {
+   "plaus_debias": 2.6711526907653815
+  },
+  "wan__obs__074": {
+   "plaus_debias": 2.7628753863366313
+  },
+  "wan__obs__075": {
+   "plaus_debias": 2.8570261541677944
+  },
+  "wan__obs__076": {
+   "plaus_debias": 2.685758613627772
+  },
+  "wan__obs__077": {
+   "plaus_debias": 2.6277914169525847
+  },
+  "wan__obs__078": {
+   "plaus_debias": 2.9372108433180184
+  },
+  "wan__obs__079": {
+   "plaus_debias": 2.9821189676391198
+  },
+  "wan__obs__080": {
+   "plaus_debias": 2.5983375169293796
+  },
+  "wan__obs__081": {
+   "plaus_debias": 2.61046258063327
+  },
+  "wan__obs__082": {
+   "plaus_debias": 2.546507258758769
+  },
+  "wan__obs__083": {
+   "plaus_debias": 2.8000268337929852
+  },
+  "wan__obs__084": {
+   "plaus_debias": 2.695794628220165
+  },
+  "wan__obs__085": {
+   "plaus_debias": 2.700773961007386
+  },
+  "wan__obs__086": {
+   "plaus_debias": 2.8407920476826556
+  },
+  "wan__obs__087": {
+   "plaus_debias": 2.6313751465466484
+  },
+  "wan__obs__088": {
+   "plaus_debias": 2.5983374947711186
+  },
+  "wan__obs__089": {
+   "plaus_debias": 2.7461691435776316
+  },
+  "wan__obs__093": {
+   "plaus_debias": 2.9574668156260087
+  },
+  "wan__obs__094": {
+   "plaus_debias": 2.8075375995027514
+  },
+  "wan__obs__095": {
+   "plaus_debias": 2.856261794859189
+  },
+  "wan__obs__096": {
+   "plaus_debias": 2.840792051695875
+  },
+  "wan__obs__097": {
+   "plaus_debias": 3.015761832390363
+  },
+  "wan__obs__098": {
+   "plaus_debias": 2.7726696024838393
+  },
+  "cosmos__obs__007": {
+   "plaus_debias": 2.6233338916480813
+  },
+  "cosmos__obs__008": {
+   "plaus_debias": 2.8407920656379906
+  },
+  "cosmos__obs__009": {
+   "plaus_debias": 2.5712739706608976
+  },
+  "cosmos__obs__010": {
+   "plaus_debias": 3.0540739047779772
+  },
+  "cosmos__obs__011": {
+   "plaus_debias": 2.8069208737334708
+  },
+  "cosmos__obs__012": {
+   "plaus_debias": 3.100929622841729
+  },
+  "cosmos__obs__014": {
+   "plaus_debias": 2.774391534509387
+  },
+  "cosmos__obs__015": {
+   "plaus_debias": 2.711328787399585
+  },
+  "cosmos__obs__016": {
+   "plaus_debias": 2.6382910516629474
+  },
+  "cosmos__obs__017": {
+   "plaus_debias": 2.6707214607855176
+  },
+  "cosmos__obs__018": {
+   "plaus_debias": 2.6941214277477954
+  },
+  "cosmos__obs__019": {
+   "plaus_debias": 2.6456536219255633
+  },
+  "cosmos__obs__021": {
+   "plaus_debias": 2.8680848576833005
+  },
+  "cosmos__obs__022": {
+   "plaus_debias": 2.6233339078079423
+  },
+  "cosmos__obs__025": {
+   "plaus_debias": 2.7553694672108433
+  },
+  "cosmos__obs__026": {
+   "plaus_debias": 2.7081234225558006
+  },
+  "cosmos__obs__027": {
+   "plaus_debias": 2.8250748328017803
+  },
+  "cosmos__obs__028": {
+   "plaus_debias": 2.886477040136642
+  },
+  "cosmos__obs__029": {
+   "plaus_debias": 2.762875379044697
+  },
+  "cosmos__obs__030": {
+   "plaus_debias": 2.6756744593808337
+  },
+  "cosmos__obs__031": {
+   "plaus_debias": 2.711328775794175
+  },
+  "cosmos__obs__032": {
+   "plaus_debias": 2.6180067026436085
+  },
+  "cosmos__obs__033": {
+   "plaus_debias": 2.5983374930835845
+  },
+  "cosmos__obs__034": {
+   "plaus_debias": 2.762875372531521
+  },
+  "cosmos__obs__035": {
+   "plaus_debias": 2.8900061032697666
+  },
+  "cosmos__obs__036": {
+   "plaus_debias": 2.5983374732050337
+  },
+  "cosmos__obs__039": {
+   "plaus_debias": 2.9419889843655933
+  },
+  "cosmos__obs__041": {
+   "plaus_debias": 2.6180066853651645
+  },
+  "cosmos__obs__042": {
+   "plaus_debias": 2.5791415831055113
+  },
+  "cosmos__obs__043": {
+   "plaus_debias": 2.6277914234738646
+  },
+  "cosmos__obs__044": {
+   "plaus_debias": 2.6597057844649044
+  },
+  "cosmos__obs__045": {
+   "plaus_debias": 2.7310437648652757
+  },
+  "cosmos__obs__046": {
+   "plaus_debias": 2.655489501975494
+  },
+  "cosmos__obs__047": {
+   "plaus_debias": 2.671152667793161
+  },
+  "cosmos__obs__048": {
+   "plaus_debias": 2.7585837642581845
+  },
+  "cosmos__obs__049": {
+   "plaus_debias": 2.6941214468075207
+  },
+  "cosmos__obs__050": {
+   "plaus_debias": 2.7379755273656743
+  },
+  "cosmos__obs__051": {
+   "plaus_debias": 2.714922214572585
+  },
+  "cosmos__obs__052": {
+   "plaus_debias": 2.7081234257051228
+  },
+  "cosmos__obs__053": {
+   "plaus_debias": 2.611222097354034
+  },
+  "cosmos__obs__054": {
+   "plaus_debias": 2.6616366723183145
+  },
+  "cosmos__obs__055": {
+   "plaus_debias": 2.7450037489029637
+  },
+  "cosmos__obs__056": {
+   "plaus_debias": 2.743022972430974
+  },
+  "cosmos__obs__057": {
+   "plaus_debias": 2.6659291124385747
+  },
+  "cosmos__obs__058": {
+   "plaus_debias": 2.6659291038832302
+  },
+  "cosmos__obs__059": {
+   "plaus_debias": 2.659705806042374
+  },
+  "cosmos__obs__060": {
+   "plaus_debias": 2.659705784016301
+  },
+  "cosmos__obs__061": {
+   "plaus_debias": 2.7013043261061527
+  },
+  "cosmos__obs__062": {
+   "plaus_debias": 2.7081234004048653
+  },
+  "cosmos__obs__063": {
+   "plaus_debias": 2.680627828602889
+  },
+  "cosmos__obs__064": {
+   "plaus_debias": 2.6277914318709845
+  },
+  "cosmos__obs__066": {
+   "plaus_debias": 2.61800668666653
+  },
+  "cosmos__obs__067": {
+   "plaus_debias": 2.708123417718105
+  },
+  "cosmos__obs__068": {
+   "plaus_debias": 2.8812366658359907
+  },
+  "cosmos__obs__070": {
+   "plaus_debias": 3.1529353834589777
+  },
+  "cosmos__obs__071": {
+   "plaus_debias": 2.7628753939411177
+  },
+  "cosmos__obs__072": {
+   "plaus_debias": 2.6534446523482607
+  },
+  "cosmos__obs__073": {
+   "plaus_debias": 2.762875375723799
+  },
+  "cosmos__obs__074": {
+   "plaus_debias": 2.648806050422071
+  },
+  "cosmos__obs__075": {
+   "plaus_debias": 2.9311304252520527
+  },
+  "cosmos__obs__076": {
+   "plaus_debias": 2.8541894287175653
+  },
+  "cosmos__obs__077": {
+   "plaus_debias": 2.77439155637342
+  },
+  "cosmos__obs__078": {
+   "plaus_debias": 2.721060832384681
+  },
+  "cosmos__obs__079": {
+   "plaus_debias": 2.89000609756737
+  },
+  "cosmos__obs__080": {
+   "plaus_debias": 2.648806049387529
+  },
+  "cosmos__obs__081": {
+   "plaus_debias": 2.6194206350344387
+  },
+  "cosmos__obs__082": {
+   "plaus_debias": 2.5751009864502614
+  },
+  "cosmos__obs__083": {
+   "plaus_debias": 2.675674457433855
+  },
+  "cosmos__obs__084": {
+   "plaus_debias": 2.612991010965136
+  },
+  "cosmos__obs__085": {
+   "plaus_debias": 2.791524211354177
+  },
+  "cosmos__obs__086": {
+   "plaus_debias": 2.6458669741925234
+  },
+  "cosmos__obs__087": {
+   "plaus_debias": 2.5983374823271403
+  },
+  "cosmos__obs__088": {
+   "plaus_debias": 2.6841218072430397
+  },
+  "cosmos__obs__089": {
+   "plaus_debias": 2.5924056771954676
+  },
+  "cosmos__obs__093": {
+   "plaus_debias": 2.9805353998775392
+  },
+  "cosmos__obs__094": {
+   "plaus_debias": 2.843113827814576
+  },
+  "cosmos__obs__095": {
+   "plaus_debias": 2.7430229856916637
+  },
+  "cosmos__obs__096": {
+   "plaus_debias": 2.7585837395723054
+  },
+  "cosmos__obs__097": {
+   "plaus_debias": 2.8075376038743163
+  },
+  "cosmos__obs__098": {
+   "plaus_debias": 2.7081234276964437
+  },
+  "hunyuan__obs__007": {
+   "plaus_debias": 2.708087738974755
+  },
+  "hunyuan__obs__008": {
+   "plaus_debias": 2.5676713911097915
+  },
+  "hunyuan__obs__009": {
+   "plaus_debias": 2.7803581668780954
+  },
+  "hunyuan__obs__010": {
+   "plaus_debias": 2.8921594106017547
+  },
+  "hunyuan__obs__011": {
+   "plaus_debias": 3.1395512508012073
+  },
+  "hunyuan__obs__012": {
+   "plaus_debias": 2.9590537487395965
+  },
+  "hunyuan__obs__014": {
+   "plaus_debias": 2.790612069948919
+  },
+  "hunyuan__obs__015": {
+   "plaus_debias": 2.7807745223010416
+  },
+  "hunyuan__obs__016": {
+   "plaus_debias": 2.61942061929349
+  },
+  "hunyuan__obs__017": {
+   "plaus_debias": 2.8918828269502943
+  },
+  "hunyuan__obs__018": {
+   "plaus_debias": 3.0890246542285555
+  },
+  "hunyuan__obs__019": {
+   "plaus_debias": 2.811880572259564
+  },
+  "hunyuan__obs__021": {
+   "plaus_debias": 2.9541132742103473
+  },
+  "hunyuan__obs__022": {
+   "plaus_debias": 2.6456536054671362
+  },
+  "hunyuan__obs__025": {
+   "plaus_debias": 2.973117917964197
+  },
+  "hunyuan__obs__026": {
+   "plaus_debias": 2.7430229677786677
+  },
+  "hunyuan__obs__027": {
+   "plaus_debias": 2.973117912795002
+  },
+  "hunyuan__obs__028": {
+   "plaus_debias": 3.0467918260519467
+  },
+  "hunyuan__obs__029": {
+   "plaus_debias": 2.8864770556228985
+  },
+  "hunyuan__obs__030": {
+   "plaus_debias": 2.8172746228072407
+  },
+  "hunyuan__obs__031": {
+   "plaus_debias": 2.7430229700151902
+  },
+  "hunyuan__obs__032": {
+   "plaus_debias": 2.627791416214743
+  },
+  "hunyuan__obs__033": {
+   "plaus_debias": 2.620831405675825
+  },
+  "hunyuan__obs__034": {
+   "plaus_debias": 2.820071225905105
+  },
+  "hunyuan__obs__035": {
+   "plaus_debias": 2.906163011325255
+  },
+  "hunyuan__obs__036": {
+   "plaus_debias": 2.888246754267493
+  },
+  "hunyuan__obs__039": {
+   "plaus_debias": 2.8562618255060843
+  },
+  "hunyuan__obs__041": {
+   "plaus_debias": 2.5792168887990456
+  },
+  "hunyuan__obs__042": {
+   "plaus_debias": 2.5792168886264184
+  },
+  "hunyuan__obs__043": {
+   "plaus_debias": 2.6104625879513073
+  },
+  "hunyuan__obs__044": {
+   "plaus_debias": 2.694121434320198
+  },
+  "hunyuan__obs__045": {
+   "plaus_debias": 2.6941214319687234
+  },
+  "hunyuan__obs__046": {
+   "plaus_debias": 2.6554895175474154
+  },
+  "hunyuan__obs__047": {
+   "plaus_debias": 2.8172746246730687
+  },
+  "hunyuan__obs__048": {
+   "plaus_debias": 2.721060842418747
+  },
+  "hunyuan__obs__049": {
+   "plaus_debias": 2.734545052844939
+  },
+  "hunyuan__obs__050": {
+   "plaus_debias": 2.765148829565215
+  },
+  "hunyuan__obs__051": {
+   "plaus_debias": 2.9101109057344243
+  },
+  "hunyuan__obs__052": {
+   "plaus_debias": 2.8075376074857026
+  },
+  "hunyuan__obs__053": {
+   "plaus_debias": 2.6458669392547542
+  },
+  "hunyuan__obs__054": {
+   "plaus_debias": 2.7310437819253197
+  },
+  "hunyuan__obs__055": {
+   "plaus_debias": 2.7968751003251957
+  },
+  "hunyuan__obs__056": {
+   "plaus_debias": 2.6860111963310316
+  },
+  "hunyuan__obs__057": {
+   "plaus_debias": 2.6010531528976086
+  },
+  "hunyuan__obs__058": {
+   "plaus_debias": 2.7082292475058884
+  },
+  "hunyuan__obs__059": {
+   "plaus_debias": 2.7310437771753477
+  },
+  "hunyuan__obs__060": {
+   "plaus_debias": 2.7628753745336874
+  },
+  "hunyuan__obs__061": {
+   "plaus_debias": 2.6597058108792213
+  },
+  "hunyuan__obs__062": {
+   "plaus_debias": 2.6756744373882824
+  },
+  "hunyuan__obs__063": {
+   "plaus_debias": 2.6711526761319337
+  },
+  "hunyuan__obs__064": {
+   "plaus_debias": 2.6366188482056643
+  },
+  "hunyuan__obs__066": {
+   "plaus_debias": 2.61007523422567
+  },
+  "hunyuan__obs__067": {
+   "plaus_debias": 2.675674461409825
+  },
+  "hunyuan__obs__068": {
+   "plaus_debias": 2.8122202553359315
+  },
+  "hunyuan__obs__070": {
+   "plaus_debias": 2.9574667813868456
+  },
+  "hunyuan__obs__071": {
+   "plaus_debias": 2.8984933507401553
+  },
+  "hunyuan__obs__072": {
+   "plaus_debias": 2.9054350796280115
+  },
+  "hunyuan__obs__073": {
+   "plaus_debias": 2.8864770335159045
+  },
+  "hunyuan__obs__074": {
+   "plaus_debias": 2.780358157677657
+  },
+  "hunyuan__obs__075": {
+   "plaus_debias": 2.802171088419482
+  },
+  "hunyuan__obs__076": {
+   "plaus_debias": 2.9402944819074834
+  },
+  "hunyuan__obs__077": {
+   "plaus_debias": 2.8282100258429255
+  },
+  "hunyuan__obs__078": {
+   "plaus_debias": 2.746633336250222
+  },
+  "hunyuan__obs__079": {
+   "plaus_debias": 2.981343683405716
+  },
+  "hunyuan__obs__080": {
+   "plaus_debias": 2.694121450159588
+  },
+  "hunyuan__obs__081": {
+   "plaus_debias": 2.644248001646789
+  },
+  "hunyuan__obs__082": {
+   "plaus_debias": 2.638493885837605
+  },
+  "hunyuan__obs__083": {
+   "plaus_debias": 2.7461691374429
+  },
+  "hunyuan__obs__084": {
+   "plaus_debias": 2.6841217963777786
+  },
+  "hunyuan__obs__085": {
+   "plaus_debias": 2.700773969335169
+  },
+  "hunyuan__obs__086": {
+   "plaus_debias": 2.7310437818828026
+  },
+  "hunyuan__obs__087": {
+   "plaus_debias": 2.6488060592519678
+  },
+  "hunyuan__obs__088": {
+   "plaus_debias": 2.6756744574361067
+  },
+  "hunyuan__obs__089": {
+   "plaus_debias": 2.6658667736268753
+  },
+  "hunyuan__obs__093": {
+   "plaus_debias": 2.847672519000826
+  },
+  "hunyuan__obs__094": {
+   "plaus_debias": 2.935313219943035
+  },
+  "hunyuan__obs__095": {
+   "plaus_debias": 2.7704372245517277
+  },
+  "hunyuan__obs__096": {
+   "plaus_debias": 2.7898448847758734
+  },
+  "hunyuan__obs__097": {
+   "plaus_debias": 2.9101108859742975
+  },
+  "hunyuan__obs__098": {
+   "plaus_debias": 2.8476725123654076
+  },
+  "magi__obs__007": {
+   "plaus_debias": 2.653444655849518
+  },
+  "magi__obs__008": {
+   "plaus_debias": 2.645653596835296
+  },
+  "magi__obs__009": {
+   "plaus_debias": 2.8468501503978927
+  },
+  "magi__obs__010": {
+   "plaus_debias": 2.9344837415117224
+  },
+  "magi__obs__011": {
+   "plaus_debias": 3.056715110602128
+  },
+  "magi__obs__012": {
+   "plaus_debias": 2.988365122945614
+  },
+  "magi__obs__014": {
+   "plaus_debias": 2.9348955025531724
+  },
+  "magi__obs__015": {
+   "plaus_debias": 2.8069208574978695
+  },
+  "magi__obs__016": {
+   "plaus_debias": 2.80753760510607
+  },
+  "magi__obs__017": {
+   "plaus_debias": 2.9629211243295726
+  },
+  "magi__obs__018": {
+   "plaus_debias": 3.028502597172516
+  },
+  "magi__obs__019": {
+   "plaus_debias": 2.8864770457357656
+  },
+  "magi__obs__021": {
+   "plaus_debias": 2.758583753211213
+  },
+  "magi__obs__022": {
+   "plaus_debias": 2.7430229874548955
+  },
+  "magi__obs__025": {
+   "plaus_debias": 2.914201233451562
+  },
+  "magi__obs__026": {
+   "plaus_debias": 2.891882842663516
+  },
+  "magi__obs__027": {
+   "plaus_debias": 2.8620575942737707
+  },
+  "magi__obs__028": {
+   "plaus_debias": 2.9030115485956722
+  },
+  "magi__obs__029": {
+   "plaus_debias": 2.8468501360330607
+  },
+  "magi__obs__030": {
+   "plaus_debias": 2.999873731817958
+  },
+  "magi__obs__031": {
+   "plaus_debias": 2.8282100101959813
+  },
+  "magi__obs__032": {
+   "plaus_debias": 3.028242108779174
+  },
+  "magi__obs__033": {
+   "plaus_debias": 2.8341824001144866
+  },
+  "magi__obs__034": {
+   "plaus_debias": 2.93436729974533
+  },
+  "magi__obs__035": {
+   "plaus_debias": 3.171323966015163
+  },
+  "magi__obs__036": {
+   "plaus_debias": 3.0471054632996086
+  },
+  "magi__obs__039": {
+   "plaus_debias": 3.2781223812249016
+  },
+  "magi__obs__041": {
+   "plaus_debias": 2.6442479956879614
+  },
+  "magi__obs__042": {
+   "plaus_debias": 2.620352190502569
+  },
+  "magi__obs__043": {
+   "plaus_debias": 2.6568210268182924
+  },
+  "magi__obs__044": {
+   "plaus_debias": 2.832436326463841
+  },
+  "magi__obs__045": {
+   "plaus_debias": 3.077176305110785
+  },
+  "magi__obs__046": {
+   "plaus_debias": 2.6830930658626344
+  },
+  "magi__obs__047": {
+   "plaus_debias": 2.758583751539469
+  },
+  "magi__obs__048": {
+   "plaus_debias": 2.774723211024456
+  },
+  "magi__obs__049": {
+   "plaus_debias": 2.708087735204097
+  },
+  "magi__obs__050": {
+   "plaus_debias": 2.6954608528401667
+  },
+  "magi__obs__051": {
+   "plaus_debias": 2.868084859942069
+  },
+  "magi__obs__052": {
+   "plaus_debias": 2.7906120712786544
+  },
+  "magi__obs__053": {
+   "plaus_debias": 2.8562618344964066
+  },
+  "magi__obs__054": {
+   "plaus_debias": 2.7704372199621847
+  },
+  "magi__obs__055": {
+   "plaus_debias": 2.8975920497496515
+  },
+  "magi__obs__056": {
+   "plaus_debias": 2.914201250303977
+  },
+  "magi__obs__057": {
+   "plaus_debias": 2.5792168959455926
+  },
+  "magi__obs__058": {
+   "plaus_debias": 2.6597057812897713
+  },
+  "magi__obs__059": {
+   "plaus_debias": 2.8620576017080923
+  },
+  "magi__obs__060": {
+   "plaus_debias": 2.9316351080460867
+  },
+  "magi__obs__061": {
+   "plaus_debias": 2.721060824921862
+  },
+  "magi__obs__062": {
+   "plaus_debias": 3.0452206032998292
+  },
+  "magi__obs__063": {
+   "plaus_debias": 2.8172746483347493
+  },
+  "magi__obs__064": {
+   "plaus_debias": 2.868084855400627
+  },
+  "magi__obs__066": {
+   "plaus_debias": 2.670192699058414
+  },
+  "magi__obs__067": {
+   "plaus_debias": 2.628957279927155
+  },
+  "magi__obs__068": {
+   "plaus_debias": 2.6711526792728004
+  },
+  "magi__obs__070": {
+   "plaus_debias": 3.1034231202893032
+  },
+  "magi__obs__071": {
+   "plaus_debias": 3.1218119551963412
+  },
+  "magi__obs__072": {
+   "plaus_debias": 2.873621108500391
+  },
+  "magi__obs__073": {
+   "plaus_debias": 3.103189687089039
+  },
+  "magi__obs__074": {
+   "plaus_debias": 3.042712388697462
+  },
+  "magi__obs__075": {
+   "plaus_debias": 3.1344477106759583
+  },
+  "magi__obs__076": {
+   "plaus_debias": 2.750631151650489
+  },
+  "magi__obs__077": {
+   "plaus_debias": 2.8075375935965705
+  },
+  "magi__obs__078": {
+   "plaus_debias": 2.914201254390591
+  },
+  "magi__obs__079": {
+   "plaus_debias": 3.0822727014214526
+  },
+  "magi__obs__080": {
+   "plaus_debias": 2.820071232692097
+  },
+  "magi__obs__081": {
+   "plaus_debias": 2.8476725001355723
+  },
+  "magi__obs__082": {
+   "plaus_debias": 2.7906120531722656
+  },
+  "magi__obs__083": {
+   "plaus_debias": 2.906163006851623
+  },
+  "magi__obs__084": {
+   "plaus_debias": 2.796875135051836
+  },
+  "magi__obs__085": {
+   "plaus_debias": 2.988923291921726
+  },
+  "magi__obs__086": {
+   "plaus_debias": 2.791341723116706
+  },
+  "magi__obs__087": {
+   "plaus_debias": 2.7113288002154925
+  },
+  "magi__obs__088": {
+   "plaus_debias": 2.944473479339052
+  },
+  "magi__obs__089": {
+   "plaus_debias": 2.9541132683551266
+  },
+  "magi__obs__093": {
+   "plaus_debias": 2.9805354053472892
+  },
+  "magi__obs__094": {
+   "plaus_debias": 2.9846698554831144
+  },
+  "magi__obs__095": {
+   "plaus_debias": 3.0172455479064215
+  },
+  "magi__obs__096": {
+   "plaus_debias": 3.1224483917608383
+  },
+  "magi__obs__097": {
+   "plaus_debias": 3.045220600858549
+  },
+  "magi__obs__098": {
+   "plaus_debias": 2.734545050516818
+  },
+  "wan__unobs__007": {
+   "plaus_debias": 2.686011163900189
+  },
+  "wan__unobs__009": {
+   "plaus_debias": 2.6756744435653936
+  },
+  "wan__unobs__010": {
+   "plaus_debias": 2.802498099571199
+  },
+  "wan__unobs__011": {
+   "plaus_debias": 2.9178457595377076
+  },
+  "wan__unobs__012": {
+   "plaus_debias": 2.830312102889819
+  },
+  "wan__unobs__016": {
+   "plaus_debias": 2.638291034151669
+  },
+  "wan__unobs__019": {
+   "plaus_debias": 2.9315082017791942
+  },
+  "wan__unobs__022": {
+   "plaus_debias": 2.6456536144711373
+  },
+  "wan__unobs__025": {
+   "plaus_debias": 2.807537602202903
+  },
+  "wan__unobs__027": {
+   "plaus_debias": 2.8282100142918543
+  },
+  "wan__unobs__028": {
+   "plaus_debias": 3.032833771725148
+  },
+  "wan__unobs__029": {
+   "plaus_debias": 2.868084825253188
+  },
+  "wan__unobs__030": {
+   "plaus_debias": 2.708123409747575
+  },
+  "wan__unobs__032": {
+   "plaus_debias": 2.5198861525902836
+  },
+  "wan__unobs__034": {
+   "plaus_debias": 2.8200712244806705
+  },
+  "wan__unobs__050": {
+   "plaus_debias": 2.722876867934535
+  },
+  "wan__unobs__060": {
+   "plaus_debias": 2.7516897685063895
+  },
+  "wan__unobs__062": {
+   "plaus_debias": 2.6442479924805844
+  },
+  "wan__unobs__063": {
+   "plaus_debias": 2.694121418160995
+  },
+  "wan__unobs__066": {
+   "plaus_debias": 2.7985273607693335
+  },
+  "wan__unobs__068": {
+   "plaus_debias": 2.8282100174248335
+  },
+  "wan__unobs__070": {
+   "plaus_debias": 3.028242107905119
+  },
+  "wan__unobs__071": {
+   "plaus_debias": 2.7210608369904774
+  },
+  "wan__unobs__073": {
+   "plaus_debias": 2.5712739592076574
+  },
+  "wan__unobs__074": {
+   "plaus_debias": 2.6194206319144726
+  },
+  "wan__unobs__077": {
+   "plaus_debias": 2.8282100115897353
+  },
+  "wan__unobs__078": {
+   "plaus_debias": 2.846850147092657
+  },
+  "wan__unobs__080": {
+   "plaus_debias": 2.7081234214502063
+  },
+  "wan__unobs__084": {
+   "plaus_debias": 2.7443474421227294
+  },
+  "wan__unobs__085": {
+   "plaus_debias": 2.665866776558655
+  },
+  "cosmos__unobs__007": {
+   "plaus_debias": 2.5983374804491683
+  },
+  "cosmos__unobs__009": {
+   "plaus_debias": 2.6233339009656764
+  },
+  "cosmos__unobs__010": {
+   "plaus_debias": 2.8553286340976287
+  },
+  "cosmos__unobs__011": {
+   "plaus_debias": 2.849837209128467
+  },
+  "cosmos__unobs__012": {
+   "plaus_debias": 2.9853162875785855
+  },
+  "cosmos__unobs__016": {
+   "plaus_debias": 2.619420643450471
+  },
+  "cosmos__unobs__019": {
+   "plaus_debias": 2.6756744669203485
+  },
+  "cosmos__unobs__022": {
+   "plaus_debias": 2.5983374842722804
+  },
+  "cosmos__unobs__025": {
+   "plaus_debias": 2.7343016854713302
+  },
+  "cosmos__unobs__027": {
+   "plaus_debias": 2.7149222043973857
+  },
+  "cosmos__unobs__028": {
+   "plaus_debias": 2.8864770098579187
+  },
+  "cosmos__unobs__029": {
+   "plaus_debias": 2.780358154900757
+  },
+  "cosmos__unobs__030": {
+   "plaus_debias": 2.7081233991276554
+  },
+  "cosmos__unobs__032": {
+   "plaus_debias": 2.521914227878832
+  },
+  "cosmos__unobs__034": {
+   "plaus_debias": 2.826427468222627
+  },
+  "cosmos__unobs__050": {
+   "plaus_debias": 2.7379755316401435
+  },
+  "cosmos__unobs__060": {
+   "plaus_debias": 2.784670542634033
+  },
+  "cosmos__unobs__062": {
+   "plaus_debias": 2.7081234089534445
+  },
+  "cosmos__unobs__063": {
+   "plaus_debias": 2.648806056010562
+  },
+  "cosmos__unobs__066": {
+   "plaus_debias": 2.6277914119037136
+  },
+  "cosmos__unobs__068": {
+   "plaus_debias": 2.954113287293671
+  },
+  "cosmos__unobs__070": {
+   "plaus_debias": 2.7747231968833774
+  },
+  "cosmos__unobs__071": {
+   "plaus_debias": 2.7803581600364393
+  },
+  "cosmos__unobs__073": {
+   "plaus_debias": 2.7210608658987994
+  },
+  "cosmos__unobs__074": {
+   "plaus_debias": 2.7081234283496203
+  },
+  "cosmos__unobs__077": {
+   "plaus_debias": 2.686011182030982
+  },
+  "cosmos__unobs__078": {
+   "plaus_debias": 2.696833952824633
+  },
+  "cosmos__unobs__080": {
+   "plaus_debias": 2.6488060455417
+  },
+  "cosmos__unobs__084": {
+   "plaus_debias": 2.6957946440055998
+  },
+  "cosmos__unobs__085": {
+   "plaus_debias": 2.586835675673165
+  },
+  "hunyuan__unobs__007": {
+   "plaus_debias": 2.6616366819302004
+  },
+  "hunyuan__unobs__009": {
+   "plaus_debias": 2.6534446376667047
+  },
+  "hunyuan__unobs__010": {
+   "plaus_debias": 2.9444735140940157
+  },
+  "hunyuan__unobs__011": {
+   "plaus_debias": 3.0142230415863938
+  },
+  "hunyuan__unobs__012": {
+   "plaus_debias": 3.044786555962826
+  },
+  "hunyuan__unobs__016": {
+   "plaus_debias": 2.6678073015072354
+  },
+  "hunyuan__unobs__019": {
+   "plaus_debias": 2.842071556856324
+  },
+  "hunyuan__unobs__022": {
+   "plaus_debias": 2.5983374994728115
+  },
+  "hunyuan__unobs__025": {
+   "plaus_debias": 2.7430229820506957
+  },
+  "hunyuan__unobs__027": {
+   "plaus_debias": 3.0314358562454413
+  },
+  "hunyuan__unobs__028": {
+   "plaus_debias": 3.1735102662226184
+  },
+  "hunyuan__unobs__029": {
+   "plaus_debias": 2.846850147041875
+  },
+  "hunyuan__unobs__030": {
+   "plaus_debias": 2.7585837489224776
+  },
+  "hunyuan__unobs__034": {
+   "plaus_debias": 2.7704371920151303
+  },
+  "hunyuan__unobs__050": {
+   "plaus_debias": 2.7478186157092126
+  },
+  "hunyuan__unobs__060": {
+   "plaus_debias": 2.598337476845863
+  },
+  "hunyuan__unobs__062": {
+   "plaus_debias": 2.659705809799077
+  },
+  "hunyuan__unobs__063": {
+   "plaus_debias": 2.659705803561365
+  },
+  "hunyuan__unobs__066": {
+   "plaus_debias": 2.6010531584020433
+  },
+  "hunyuan__unobs__068": {
+   "plaus_debias": 2.694121440156813
+  },
+  "hunyuan__unobs__070": {
+   "plaus_debias": 2.8837099971580935
+  },
+  "hunyuan__unobs__071": {
+   "plaus_debias": 2.9282119715929658
+  },
+  "hunyuan__unobs__073": {
+   "plaus_debias": 2.828210016908944
+  },
+  "hunyuan__unobs__074": {
+   "plaus_debias": 2.743022965911763
+  },
+  "hunyuan__unobs__077": {
+   "plaus_debias": 2.7985273523375866
+  },
+  "hunyuan__unobs__078": {
+   "plaus_debias": 2.7466333329944375
+  },
+  "hunyuan__unobs__080": {
+   "plaus_debias": 2.6488060484068554
+  },
+  "hunyuan__unobs__084": {
+   "plaus_debias": 2.6566191273851976
+  },
+  "hunyuan__unobs__085": {
+   "plaus_debias": 2.7164985015388337
+  },
+  "magi__unobs__007": {
+   "plaus_debias": 2.7697227275842473
+  },
+  "magi__unobs__009": {
+   "plaus_debias": 2.6382910361704157
+  },
+  "magi__unobs__010": {
+   "plaus_debias": 2.947043539384635
+  },
+  "magi__unobs__011": {
+   "plaus_debias": 3.0592699776907955
+  },
+  "magi__unobs__012": {
+   "plaus_debias": 2.972103662433078
+  },
+  "magi__unobs__016": {
+   "plaus_debias": 2.8075375995442107
+  },
+  "magi__unobs__019": {
+   "plaus_debias": 2.7628753893120086
+  },
+  "magi__unobs__022": {
+   "plaus_debias": 2.6756744586930057
+  },
+  "magi__unobs__025": {
+   "plaus_debias": 3.025955591292061
+  },
+  "magi__unobs__027": {
+   "plaus_debias": 2.828210012390281
+  },
+  "magi__unobs__028": {
+   "plaus_debias": 2.9590537869627265
+  },
+  "magi__unobs__029": {
+   "plaus_debias": 2.894960975174871
+  },
+  "magi__unobs__030": {
+   "plaus_debias": 2.999873718239565
+  },
+  "magi__unobs__032": {
+   "plaus_debias": 3.0271220197002946
+  },
+  "magi__unobs__034": {
+   "plaus_debias": 2.8476725104517175
+  },
+  "magi__unobs__050": {
+   "plaus_debias": 2.7379755430703803
+  },
+  "magi__unobs__060": {
+   "plaus_debias": 2.7195046745655684
+  },
+  "magi__unobs__062": {
+   "plaus_debias": 2.881236669559376
+  },
+  "magi__unobs__063": {
+   "plaus_debias": 2.807537608360949
+  },
+  "magi__unobs__066": {
+   "plaus_debias": 2.828210025900097
+  },
+  "magi__unobs__068": {
+   "plaus_debias": 2.636618852072249
+  },
+  "magi__unobs__070": {
+   "plaus_debias": 3.0271220589749754
+  },
+  "magi__unobs__071": {
+   "plaus_debias": 3.017245539978865
+  },
+  "magi__unobs__073": {
+   "plaus_debias": 2.988365151714967
+  },
+  "magi__unobs__074": {
+   "plaus_debias": 2.9076685139852954
+  },
+  "magi__unobs__077": {
+   "plaus_debias": 2.9998737210468587
+  },
+  "magi__unobs__078": {
+   "plaus_debias": 2.8547838797977145
+  },
+  "magi__unobs__080": {
+   "plaus_debias": 2.798527363964998
+  },
+  "magi__unobs__084": {
+   "plaus_debias": 2.6041415858167323
+  },
+  "magi__unobs__085": {
+   "plaus_debias": 3.0142230424346725
+  }
+ }
+}

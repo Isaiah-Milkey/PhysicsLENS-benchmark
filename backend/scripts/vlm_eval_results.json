@@ -1,0 +1,272 @@
+{
+  "model": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "results": [
+    {
+      "video": "test_videos/ai/sora/basketball-explosion.mp4",
+      "label": "ai",
+      "n_frames": 256,
+      "single_scores": [
+        0.2,
+        0.2,
+        0.2,
+        0.9,
+        0.2
+      ],
+      "single_mean": 0.33999999999999997,
+      "single_peak": 0.9,
+      "single_failures": [
+        "null",
+        "null",
+        "null",
+        "fireball",
+        "null"
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "fire effect",
+      "multi_explanation": "The fire effect on the basketball is not physically plausible as it defies the laws of combustion and heat transfer.",
+      "multi_confidence": 0.7
+    },
+    {
+      "video": "test_videos/ai/sora/petri-dish-pandas.mp4",
+      "label": "ai",
+      "n_frames": 300,
+      "single_scores": [
+        0.2,
+        0.2,
+        0.9,
+        0.2,
+        0.9
+      ],
+      "single_mean": 0.48,
+      "single_peak": 0.9,
+      "single_failures": [
+        "null",
+        "toy monkeys",
+        "gravity",
+        "animal",
+        "gravity"
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "animal movement",
+      "multi_explanation": "The animals appear to be moving in an unrealistic manner, as if they are floating or jumping without any visible force or interaction.",
+      "multi_confidence": 0.7
+    },
+    {
+      "video": "test_videos/ai/sora/ships-in-coffee.mp4",
+      "label": "ai",
+      "n_frames": 450,
+      "single_scores": [
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9
+      ],
+      "single_mean": 0.9,
+      "single_peak": 0.9,
+      "single_failures": [
+        "gravity",
+        "gravity",
+        "gravity",
+        "gravity",
+        "gravity"
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "The ships appear to be floating on a liquid surface, which is not typical for real-world physics.",
+      "multi_explanation": "In real-world physics, ships do not float on liquid surfaces like coffee. The interaction between the ships and the liquid appears unnatural.",
+      "multi_confidence": 0.7
+    },
+    {
+      "video": "test_videos/ai/lumiere/beer_pouring.mp4",
+      "label": "ai",
+      "n_frames": 80,
+      "single_scores": [
+        0.2,
+        0.0,
+        0.0,
+        0.2,
+        0.0
+      ],
+      "single_mean": 0.08,
+      "single_peak": 0.2,
+      "single_failures": [
+        "null",
+        null,
+        null,
+        "foam overflow",
+        null
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "Foam Overflow",
+      "multi_explanation": "The foam appears to overflow the glass more than expected, suggesting a potential issue with the fluid dynamics or the rate of pouring.",
+      "multi_confidence": 0.7
+    },
+    {
+      "video": "test_videos/ai/videopoet/tidal_wave.mp4",
+      "label": "ai",
+      "n_frames": 57,
+      "single_scores": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "single_mean": 0.2,
+      "single_peak": 0.2,
+      "single_failures": [
+        "wave dynamics",
+        "wave height",
+        "null",
+        "null",
+        "wave dynamics"
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "wave deformation",
+      "multi_explanation": "The waves appear to be deforming in an unrealistic manner, especially towards the end of the sequence where the wave crests seem to flatten out abruptly without a natural transition.",
+      "multi_confidence": 0.7
+    },
+    {
+      "video": "test_videos/real/physics_iq/balls-collide.mp4",
+      "label": "real",
+      "n_frames": 128,
+      "single_scores": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "single_mean": 0.2,
+      "single_peak": 0.2,
+      "single_failures": [
+        "null",
+        "null",
+        "null",
+        "null",
+        "null"
+      ],
+      "multi_score": 0.0,
+      "multi_failure": null,
+      "multi_explanation": "The balls remain stationary on the table, indicating no motion or interaction.",
+      "multi_confidence": 1.0
+    },
+    {
+      "video": "test_videos/real/physics_iq/ball-ramp.mp4",
+      "label": "real",
+      "n_frames": 128,
+      "single_scores": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "single_mean": 0.2,
+      "single_peak": 0.2,
+      "single_failures": [
+        "null",
+        "null",
+        "null",
+        "null",
+        "null"
+      ],
+      "multi_score": 0.0,
+      "multi_failure": null,
+      "multi_explanation": "The ball is seen rolling off the ramp and moving out of frame, which is consistent with the laws of motion.",
+      "multi_confidence": 1.0
+    },
+    {
+      "video": "test_videos/real/physics_iq/ball-and-block-fall.mp4",
+      "label": "real",
+      "n_frames": 128,
+      "single_scores": [
+        0.9,
+        0.8,
+        0.2,
+        0.2,
+        0.8
+      ],
+      "single_mean": 0.5800000000000001,
+      "single_peak": 0.9,
+      "single_failures": [
+        "gravity",
+        "ball in mid-air",
+        "null",
+        "null",
+        "gravity"
+      ],
+      "multi_score": 0.0,
+      "multi_failure": null,
+      "multi_explanation": "The video shows a tennis ball falling onto a pillow and bouncing off it, which is consistent with real-world physics.",
+      "multi_confidence": 1.0
+    },
+    {
+      "video": "test_videos/real/physics_iq/block-domino.mp4",
+      "label": "real",
+      "n_frames": 128,
+      "single_scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.2
+      ],
+      "single_mean": 0.08,
+      "single_peak": 0.2,
+      "single_failures": [
+        null,
+        null,
+        null,
+        "null",
+        "null"
+      ],
+      "multi_score": 0.0,
+      "multi_failure": null,
+      "multi_explanation": "The blocks fall over due to gravity, which is a realistic physical phenomenon.",
+      "multi_confidence": 1.0
+    },
+    {
+      "video": "test_videos/real/wikimedia/bouncing_ball.webm",
+      "label": "real",
+      "n_frames": 656,
+      "single_scores": [
+        0.8,
+        0.0,
+        0.2,
+        0.2,
+        0.8
+      ],
+      "single_mean": 0.4,
+      "single_peak": 0.8,
+      "single_failures": [
+        "gravity",
+        null,
+        "null",
+        "null",
+        "shadow"
+      ],
+      "multi_score": 0.2,
+      "multi_failure": "motion of the ball",
+      "multi_explanation": "The ball is shown moving without any apparent force applied to it.",
+      "multi_confidence": 0.7
+    }
+  ],
+  "summary": {
+    "single_mean": {
+      "ai_mean": 0.4,
+      "real_mean": 0.292,
+      "auc": 0.58
+    },
+    "single_peak": {
+      "ai_mean": 0.6200000000000001,
+      "real_mean": 0.45999999999999996,
+      "auc": 0.66
+    },
+    "multi_score": {
+      "ai_mean": 0.2,
+      "real_mean": 0.04,
+      "auc": 0.9
+    }
+  }
+}
